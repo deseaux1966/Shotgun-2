@@ -1,4 +1,4 @@
-# Reproduction package: mmt8bOccBin3_covid_bT_baa (gen1, taubar=0.14, chi=0.5)
+# Reproduction package: two estimations (gen1, taubar=0.14, chi=0.5)
 
 Snapshot copied from `C:\Users\gawater\Documents\GitHub\Shotgun` on 2026-08-08,
 corresponding to the results documented in
