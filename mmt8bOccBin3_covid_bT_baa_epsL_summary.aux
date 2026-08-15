@@ -1,0 +1,53 @@
+\relax 
+\@writefile{toc}{\contentsline {section}{\numberline {1}Model Extensions}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Debt-to-GDP observable.}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Baa-based loan rate.}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Genuine OccBin ZLB likelihood.}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{COVID labor-supply shock.}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Recalibration: $\bar  \tau $ and $\chi $.}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reserve equation fix: genuine debt-state coupling.}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Less informative Taylor-rule priors.}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Summary of stochastic elements}{4}{}\protected@file@percent }
+\newlabel{sec:shocksummary}{{1.1}{4}{}{subsection.1.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces All fifteen stochastic elements of the estimated model. ``Persistence'' reports whether the process's own AR(1) coefficient is fixed by calibration or freely estimated; iid processes (measurement errors and three of the structural shocks) have no persistence parameter. Standard deviations, priors, and posterior estimates for all fifteen are in Table~\ref {tab:posteriors}.}}{4}{}\protected@file@percent }
+\newlabel{tab:shocks}{{1}{4}{}{table.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Estimation Methodology}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Data}{5}{}\protected@file@percent }
+\newlabel{sec:data}{{2.1}{5}{}{subsection.2.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Observable construction. \texttt  {OPHNFB} is nonfarm business sector output per hour (labor productivity), used to detrend output and deposits. \texttt  {BAA} (Moody's Seasoned Baa Corporate Bond Yield, monthly) replaces the bank prime rate (\texttt  {MPRIME}) used in earlier versions of this model. \texttt  {FYGFDPUN} (Federal Debt Held by the Public, quarterly, millions of dollars) replaces \texttt  {GFDEBTN} (gross/total public debt); it is divided by 1000 before forming the ratio because \texttt  {FYGFDPUN} is reported in millions of dollars while \texttt  {GDP} is reported in billions. $q$ subscripts denote quarterly averages of monthly series.}}{5}{}\protected@file@percent }
+\newlabel{tab:data}{{2}{5}{}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Two-stage mode-finding}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}MCMC jumping covariance and jump-scale tuning}{6}{}\protected@file@percent }
+\newlabel{sec:jumpcov}{{2.3}{6}{}{subsection.2.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Full \texttt  {mh\_jscale}/jumping-covariance/calibration tuning history. \texttt  {posterior-cov} denotes a custom jumping covariance built from a preliminary round's own pooled posterior draws (see Section~\ref {sec:postcov}). The final production run (\texttt  {posterior-cov}, \texttt  {mh\_jscale=0.25}, $\bar  \tau =0.14$, $\chi =0.5$) completed in 7h51m.}}{7}{}\protected@file@percent }
+\newlabel{tab:jscale}{{3}{7}{}{table.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Jumping covariance from pooled posterior draws}{7}{}\protected@file@percent }
+\newlabel{sec:postcov}{{2.4}{7}{}{subsection.2.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Smoother limitation}{8}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Diffuse-prior re-estimation (current round)}{8}{}\protected@file@percent }
+\newlabel{sec:diffuse}{{2.6}{8}{}{subsection.2.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Tuning history for the diffuse-prior re-estimation round (reserve-equation fix; $b_\pi ,b_y$ diffuse Gamma priors; $\varphi _b$ prior mean lowered to 0.05). The jscale=0.10 production run's severe diagnostic-to-production degradation (28.0\%/17.5\% $\to $ 5.43\%/5.31\%, roughly 5$\times $, worse than any prior round) motivated both a further jscale cut and, given how badly the usual 3{,}000-draw diagnostic had just mispredicted production behavior, a longer 8{,}000-draw diagnostic before committing to another full run.}}{9}{}\protected@file@percent }
+\newlabel{tab:jscale2}{{4}{9}{}{table.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Calibrated Parameters}{9}{}\protected@file@percent }
+\newlabel{sec:calib}{{3}{9}{}{section.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Posterior Estimates}{9}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Prior (dashed red) and posterior (solid blue) densities for the policy parameters $b_\pi $, $b_y$, $a_i$, and $\varphi _b$, current (diffuse-prior) round. Dotted vertical lines mark the posterior mean.}}{10}{}\protected@file@percent }
+\newlabel{fig:priorpost}{{1}{10}{}{figure.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Geweke (1992) Convergence Diagnostics}{10}{}\protected@file@percent }
+\newlabel{sec:geweke}{{5}{10}{}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Determinacy and Expectational Stability}{11}{}\protected@file@percent }
+\newlabel{sec:detestab}{{6}{11}{}{section.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Combined determinacy/E-stability region over $(b_\pi ,b_y)\in [0,5]\times [0,3]$, all other parameters at posterior means (current, diffuse-prior round). Green: determinate \emph  {and} E-stable (the two conditions coincide exactly on this grid, with 0/3{,}600 mismatched cells). Red: indeterminate or explosive, and E-unstable. The star marks the posterior mean $(b_\pi ,b_y)=(3.474,0.083)$, now visible within the plotted range.}}{12}{}\protected@file@percent }
+\newlabel{fig:detestab}{{2}{12}{}{figure.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Steady-State Annualized Rates}{12}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Calibrated (non-estimated) parameters for the results in this note. $\pi ^{ss}$ and $r^{\ell ,ss}$ are reference values used only in the tax-rule/debt-issuance block (Section~1) and the Taylor-rule normalization; the model's actual \emph  {endogenous} non-ZLB steady state, reported in Table~\ref {tab:ss}, need not equal them exactly. $\rho _a,\rho _{xa}$ are fixed rather than estimated because freeing them previously drove $\rho _a$ to a near-unit-root value and produced a non-positive-definite Hessian at the mode (Section~2.2).}}{14}{}\protected@file@percent }
+\newlabel{tab:calib}{{5}{14}{}{table.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Posterior estimates, current (diffuse-prior) round: 2 chains $\times $ 50{,}000 draws, \texttt  {mh\_jscale=0.05}, \texttt  {hessian} jumping covariance, true OccBin ZLB likelihood, reserve-equation fix (Section~1), \texttt  {FYGFDPUN}-based debt observable, $\bar  \tau =0.14$, $\chi =0.5$. $\rho _a,\rho _{xa}$ remain fixed at 0.95 (see Section 2.2).}}{15}{}\protected@file@percent }
+\newlabel{tab:posteriors}{{6}{15}{}{table.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Previous round's posterior estimates (structural parameters only), reproduced for comparison: pre-fix reserve equation, tight $b_\pi ,b_y,\varphi _b$ priors, custom pooled-posterior jumping covariance, \texttt  {mh\_jscale=0.25}.}}{15}{}\protected@file@percent }
+\newlabel{tab:posteriors_old}{{7}{15}{}{table.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Geweke convergence test $p$-values, 15\% taper, by chain (current diffuse-prior round, \texttt  {hessian} covariance, \texttt  {mh\_jscale=0.05}, $\bar  \tau =0.14$, $\chi =0.5$).}}{16}{}\protected@file@percent }
+\newlabel{tab:geweke}{{8}{16}{}{table.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Steady-state gross quarterly rates and simple annualized percentages ($(\text  {rate}^4-1)\times 100$) at the posterior mean parameter vector, non-ZLB (RELAX) regime, $\bar  \tau =0.14$, $\chi =0.5$, current (diffuse-prior) round.}}{16}{}\protected@file@percent }
+\newlabel{tab:ss}{{9}{16}{}{table.9}{}}
+\gdef \@abspage@last{16}

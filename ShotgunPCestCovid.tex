@@ -1,0 +1,958 @@
+\documentclass[]{article}
+
+\usepackage{layout}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{amsthm}
+\usepackage{appendix}
+\usepackage{graphicx}
+
+\usepackage[backend=biber,
+style=authoryear,
+sorting=nyt,
+uniquename=false
+]{biblatex}
+\addbibresource{macrotest.bib}
+\bibliography{macrotest}
+%\theoremstyle{plain}% Theorem-like structures provided by amsthm.sty
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+%\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{result}{Result}
+
+%\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newtheorem{notation}{Notation}
+\newtheorem{assumption}{Assumption}
+
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{hhline}
+%\usepackage{cellspace}
+
+\usepackage{subcaption}
+%\setlength\cellspacetoplimit{5pt}            %Using booktabs make this superfluous?
+%\setlength\cellspacebottomlimit{5pt}
+\geometry{lmargin=1.5in,rmargin=1.5in}
+
+\begin{document}
+
+\title{Shotgun Wedding: The Unpleasant Monetarist Arithmetic and Monetary Finance}
+\date{\textsf{\today}}
+\author{George A. Waters\footnote{email:  gawater@gmail.com;  website:  about.illinoisstate.edu/gawater}\footnote{There are no financial relationships or financial support to report.}
+\\Illinois State University}
+\maketitle
+
+
+\begin{abstract}
+Stabilization policy conducted through the interest rate on bank reserves and partial monetary finance of fiscal deficits is a potentially beneficial policy combination. Under the \textit{unpleasant monetarist arithmetic}, a sale of bonds by the monetary authority raises steady state inflation due to the higher interest cost of the net debt. The same intuition suggests that monetary finance of fiscal deficits, the purchase of bonds by the monetary authority, as advocated by Modern Monetary Theorists, would lower inflation. While full monetary finance is not recommended, as it eliminates the bond market, partial monetary finance with monetary policy targeting interest on reserves could be beneficial for countries with existing debt in excess of the needs of financial markets.
+
+This paper presents a shopping time model of money demand with a banking sector where deposits provide liquidity services but require bank reserves. Fiscal and monetary budget constraints are treated separately to allow for the study of monetary finance. The resulting consolidated budget constraint demonstrates that monetary seigniorage must cover the cost of the fiscal deficit, the interest on the debt, and the interest on reserves. Higher costs imply higher steady state inflation, and the model embodies the intuition about monetary finance and the unpleasant monetarist arithmetic. Alternatively, for a given inflation target there is a trade-off between the fiscal deficit and the interest rate on reserves. 
+
+Bayesian estimation of an extension of the model for U.S. data 2009-2025 verifies the intuitions above. Though inflation was elevated, the estimates show that policy satisfies conditions for determinacy and expectational stability and has the characteristics of monetary dominance.
+
+\textbf{Keywords: \ }Unpleasant Monetarist
+Arithmetic, Monetary Finance, Fiscal-Monetary models, Expectational Stability, Modern Monetary Theory
+
+\textbf{JEL classification: }A22, E0, E52, E60
+\end{abstract}
+
+
+\pagebreak
+
+\onehalfspacing
+\section{Introduction}
+ 
+The \textit{unpleasant monetarist arithmetic} (\textcite{sargent1981unpleasant}) conveys the idea that a sale of bonds by the monetary authority can increase inflation due to the higher interest costs of the net debt. If selling bonds is bad, isn't buying bonds good? Modern Monetary Theorists (MMT), such as \textcite{Kelton2020}, advocate for full monetary finance, equivalent to the monetary authority buying all government debt. 
+
+Monetary finance has a bad reputation, as it is the cause of most hyperinflations, \textcite{sargent1982ends}. However, Japan is a notable case where monetary finance has been used responsibly. One objection, particularly relevant before the Great Recession, is that full monetary finance impedes the conduct of open market operations, since it eliminates the bond market. Furthermore, \textcite{AIYAGARI98debt} and others\footnote{\textcite{Woodford90debt}, \textcite{Azzimonti2019debtwithbanks}, and \textcite{brunnermeier24safe} have similar implications for optimal debt.} demonstrate that government debt held by the public alleviates financial market frictions, so full monetary finance cannot be recommended.
+
+However, the use of partial monetary finance while targeting the interest rate on reserves for short run stabilization is a policy combination that merits consideration, particularly for countries with existing debt in excess of that required by financial markets. Monetary finance reduces the interest payments on the net debt, though the interest on reserves constitutes an additional cost. 
+
+The present work combines a shopping time model of money demand with a banking sector that includes reserves, while accounting for the fiscal and monetary budget constraints separately to allow for the study of monetary finance. The resulting steady state consolidated government budget constraint contains much of the intuition. Higher costs to the government, including fiscal deficits, interest on the debt, and interest on reserves, requires higher inflation to generate the necessary seigniorage.
+
+The unpleasant monetarist arithmetic and the benefit of monetary finance are both apparent. The greater the fraction of debt purchased by the monetary authority, the lower the steady state inflation rate and vice versa. From another perspective, for a given inflation target and degree of monetary finance, there is a trade-off between the fiscal deficit and the interest on reserves. The higher the deficit, the lower the steady state interest rate on reserves must be to achieve the steady state inflation target.
+
+The model is estimated for U.S. data 2009-2025, when the Federal Reserve targets the interest rate on reserves, using Bayesian methods while accounting for the zero lower bound (ZLB) on interest rates and the shock to labor supply during the COVID-19 recession. Estimated values of the policy parameters indicate that fiscal policy was passive in that taxes responded to stabilize the debt, while monetary policy actively stabilized inflation, in the language of \textcite{leeper1991active}. Given the other parameter estimates, the Taylor principle is a good guide to the response of the policy rate to inflation required to achieve determinacy and expectational stability.
+The stability results for interest rate rules are similar to those in \textcite{bullardmitra02}. \textcite{eusepi2018fiscal} study a model with active fiscal and monetary policy, though without a financial sector. The policy requirements for long run expectational stability are similar. 
+
+For the short term conduct of monetary policy, there is an inverse relationship between policy rates and subsequent inflation. In the steady state analysis, however, higher costs to the government cause inflation and nominal rates to rise together, as with the Neo-Fisherian policy in \textcite{cochrane2023NeoFisher}. The contrast between the short and long run intuitions echoes the interpretations of open market operations in the first paragraph. An open market sale of bonds increases the interest on the net debt, which leads to higher inflation in the steady state analysis. Such a sale is permanent. In the short run, an open market sale to lower the money supply can reduce inflation due to liquidity effects, but it is likely followed by a bond purchase in the future.
+
+There are no countries where the fraction of bonds purchased by the monetary authority is an explicit target, but some countries do use monetary finance. The European Central Bank has made indirect purchases of government bonds to control spikes in yields of the bonds for some countries, as discussed in \textcite{Attavila2015OMT}. The Bank of Japan currently holds 43\% of the debt issued by the fiscal authorities, which helps to explain the limited impact of a gross debt well over 200\% of GDP. Since 2010, Japanese policy has been \textit{de facto} close to the policy proposed here. The net debt has stabilized around 120\% of GDP, largely due to bond purchases by the Bank of Japan, and monetary policy is conducted using the interest rate on reserves. See \textcite{Hansen2023JapanDebt} and \textcite{waters2024potentiallypleasant} for more detailed discussions.
+
+\textcite{waters2024potentiallypleasant} has analytic results in a small model with monetary finance, but it does not have a banking sector. The present model builds on those of \textcite{ireland2014macroeconomics} and Chapter 27 of \textcite{sargent2018recursive} who both develop shopping time models of money demand. The former includes a banking sector to study monetary policy conducted through interest on reserves, which uses a model of deposits based on \textcite{christiano1995inside}. \textcite{Belongia2014monies} use a similar model to study the relationships between monetary aggregates. \textcite{sargent2018recursive} focuses on fiscal-monetary interactions including the unpleasant monetarist arithmetic. \textcite{bassetto2013fiscal} develop a model treating fiscal and monetary policy constraints independently to determine conditions for central bank profitability. 
+
+Models of the fiscal theory of the price level (\cite{leith2016understanding}, \textcite{cochrane2022ftpl}) show interactions of fiscal and monetary policy and their impact on prices as well. \textcite{bassettosargent2020shotgun} discuss the interpretation of the unpleasant monetarist arithmetic, the fiscal theory of the price level and the quantity theory of money in a single model. 
+
+The paper is organized as follows. Section 2 derives the consolidated budget constraint and discusses the results from the steady state version. Section 3 describes the micro-founded model with a banking sector that determines the demand for money and reserves. Section 4 describes the empirical results. Section 5 quantitative analysis of the resulting steady state relationships, and Section 6 concludes.
+
+\section{Budget Constraints}
+
+To examine monetary financing of fiscal deficits and interest on reserves together,
+consider the flow budget constraints for fiscal and monetary policy
+separately. The fiscal constraint is%
+\begin{equation}
+ P_{t}g_{t}=P_{t}\tau _{t}+r_{t}^{-1}B_{t}^{T}-B_{t-1}^{T}+RCB_{t}
+ \label{fiscal BC}
+\end{equation}
+where the price level is $P_{t},$ and real government spending and taxes are $%
+g_{t}$ and $\tau _{t}$. One period discount bonds $B_{t}^{T}$ are issued by the fiscal authority and paid off at a gross
+yield of $r_{t}$. The fiscal authority also receives a transfer $RCB_{t}$
+from the monetary authority.
+
+The monetary authority pays gross interest $r_{t}^{n}$ on reserves $N_{t}$ and has the flow budget constraint%
+\begin{equation}
+ r_{t}^{-1}B_{t}^{M}-B_{t-1}^{M}+RCB_{t}=M_{t}-M_{t-1}-(r_{t}^{n}-1)N_{t}
+ \label{CB BC}
+\end{equation}
+where bonds held by the central bank is $B_{t}^{M}$, and currency is $M_{t}$. The timing of the $N_{t}$ term reflects the short term payments of interest on reserve deposits and matches the expression for bank profits.
+
+Monetary financing is represented by the fraction $\Omega$ of the bonds issued that are purchased by the monetary authority. The bonds held by the public or net debt is defined as
+\[
+B_{t}=B_{t}^{T}-B_{t}^{M},
+\]
+so the following hold.
+\begin{eqnarray}
+ B_{t}^{M}=\Omega B_{t}^{T} \\
+ B_{t}=(1-\Omega) B_{t}^{T} \label{net debt}
+\end{eqnarray}
+
+Using the above relation for $B_{t}^{M}$ and substituting for $RCB_{t}$ in the above fiscal and monetary constraints yields the following consolidated budget constraint.%
+\begin{equation}
+M_{t}=M_{t-1}+P_{t}g_{t}-P_{t}\tau _{t}+(r_{t}^{n}-1)N_{t}-(1-\Omega)(r_{t}^{-1}B_{t}^{T}-B_{t-1}^{T})
+\label{cons bc}
+\end{equation}
+
+The MMT case of full monetary finance is equivalent to the monetary authority purchasing all the bonds issued so $\Omega=1$ and $B_{t}^{M}=B_{t}^{T}$. Partial monetary finance means $\Omega\in(0,1)$.
+
+The policy of purchasing bonds is a money supply rule. Given all the other values including the fraction purchased $\Omega$, the monetary authority sets $M_{t}$ according to the constraint (\ref{cons bc}). However, active monetary policy can still be conducted via interest on reserves. Let the interest rate rule for $r^{n}_{t}$ depend on gross inflation
+\[
+\Pi_{t}=\frac{P_{t}}{P_{t-1}}
+\]
+relative to steady state inflation $\Pi$ as follows.
+\begin{equation} \label{ior}
+    r^{n}_{t}=r_{t}^{\alpha_{i}}\left(\frac{\Pi_{t}}{\Pi}\right)^{b_{\pi}}
+\end{equation}
+The interest rate is set below the market rate on bonds so the parameter $\alpha_{i}$ is such that $0\leq\alpha_{i}<1$. The policy rate is set to respond directly to inflation so the parameter $b_{\pi}$ is non-negative, and the Taylor principle is satisfied when $b_{\pi}>1$. 
+
+\subsection{Real steady state consolidated budget constraint}
+
+The consolidated budget constraint can be written in real terms where real currency and real bonds are
+\[m_{t}=\frac{M_{t}}{P_{t}},\] and \[b_{t}=\frac{B_{t}}{P_{t}}.\]
+
+The constraint becomes
+\begin{equation}
+g_{t}-\tau _{t}+(r_{t}^{n}-1)n_{t}=(1-\Omega)(r_{t}^{-1}b_{t}^{T}-\Pi^{-1}_{t}b_{t-1}^{T})+m_{t}-\Pi^{-1}_{t}m_{t-1}.
+\label{cons bc real}
+\end{equation}
+The steady state version of the consolidated budget constraint is the focus of this section. The existing real debt is denoted $b^{T}_{0}$, so the steady state net debt is $b=(1-\Omega)b_{0}^{T}$.
+\begin{equation}
+g-\tau+n(r^{n}-1)=(1-\Omega)b_{0}^{T}(r^{-1}-\Pi^{-1})+m(1-\Pi^{-1}).
+\label{cons bc real ss}
+\end{equation}
+The following assumptions allow for interpretation of the constraint.
+\begin{assumption}
+Policymakers act to maintain the existing steady state real debt, so $b_{0}^{T}$ is fixed.
+\end{assumption}
+\begin{assumption}
+The real rate given by $R=r\Pi^{-1}$ is fixed\footnote{This is a ``monetarist" assumption in \textcite{sargent1981unpleasant}}.
+\end{assumption}
+\begin{assumption}
+The steady state demand for real currency $m=L(\Pi)$ is decreasing in inflation.
+\end{assumption}
+\begin{assumption}
+The steady state quantity of real reserves $n=J(\Pi)$ is decreasing in inflation. 
+\end{assumption}
+
+Using the above and the steady state version of the interest rate rule (\ref{ior}), it is convenient to express the steady state budget constraint, showing the relationships to inflation as follows.
+\begin{equation}
+g-\tau+R^{b}(\Pi)+R^{n}(\Pi)=s^{m}(\Pi)
+\label{cons bc real ss fig}
+\end{equation}
+The real interest payment on the net debt is
+\[R^{b}(\Pi)=(1-\Omega)b_{0}^{T}(1-R^{-1})\Pi^{-1},\]
+the real interest payment on reserves is
+\[R^{n}(\Pi)=J(\Pi)\left[\left(\Pi R\right)^{\alpha_{i}}-1\right]\]
+and the monetary seigniorage is
+\[s^{m}(\Pi)=L(\Pi)(1-\Pi^{-1}).\]
+
+The monetary seigniorage must cover the costs of the fiscal deficit, interest on existing debt and interest on reserves.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=10cm]{Fig 1.png}
+    \caption{Representation of the steady state relation (\ref{cons bc real ss fig}) as functions of inflation $\Pi$.}
+    \label{fig:1}
+\end{figure}
+The two sides of the constraint (\ref{cons bc real ss fig}) are represented in Figure \ref{fig:1}. The interest on the debt term $R^{b}(\Pi)$ is unambiguously non-increasing in inflation and the steady state deficit is constant, but the other two terms are more involved. The money demand $L(\Pi)$ function is decreasing with inflation, but the positive slope of the term $1-\Pi^{-1}$ dominates for $\Pi$ near one. As inflation rises the slope of the term $1-\Pi^{-1}$ approaches zero, so there is a maximum level of seigniorage. Whether the seigniorage function $s^{m}(\Pi)$ ultimately declines depends on the money demand $L(\Pi)$. In \textcite{sargent1981unpleasant} and \textcite{werning2024uma}, money demand is linear, which leads to a downward sloping portion of $s^{m}(\Pi)$ for large $\Pi$, but that is not guaranteed here\footnote{See \textcite{waters2024potentiallypleasant} for a related example where $s^{m}(\Pi)$ has a maximum but does not decline.}.
+
+While the real interest on the debt is decreasing with inflation, the slope of the real interest on reserves $R^{n}$ is ambiguous. It is safe to assume that the slope of the payments on the left hand side of the steady state budget relation is less than that for seigniorage $s^{m}(\Pi)$ at the intersection for inflation near one.
+
+\subsection{Results}
+
+The steady state budget constraint (\ref{cons bc real ss fig}) represented in Figure \ref{fig:1} extends some established results to a more general setting.
+\begin{result}
+Higher deficits $g-\tau$ are associated with higher inflation, as shown by the $R^{b}+R^{n}+g-\tau$ curve shifting up, leading to a higher $\Pi^{*}$, but the curve has a maximum, so there is a limit to sustainable deficits.
+\end{result}
+
+MMT advocates have suggested that higher deficits do not necessarily lead to higher interest rates, which contradicts the short run intuition from a loanable funds graph. Figure \ref{fig:1} shows that the claim is not correct for steady states either. Given a fixed real rate, nominal rates and inflation both rise with the deficit.
+
+\begin{result}
+    \textbf{The Unpleasant Monetarist Arithmetic}:  \textcite{sargent2018recursive} describe ``one big open market operation" where the monetary authority sells bonds, raising the steady state net debt. On the graph, the fraction $\Omega$ falls, net debt $b$ rises, and the $R^{b}+R^{n}+g-\tau$ curve shifts up, leading to a higher $\Pi^{*}$.
+\end{result}
+\begin{result}
+    \textbf{The Potentially Pleasant Modern Monetary Arithmetic}: Conversely, if the monetary authority commits to buying a fraction $\Omega$ of bonds, the $R^{b}+g-\tau$ curve shifts down, and inflation falls. Alternatively, for a given steady state inflation level $\Pi$, a higher fraction $\Omega$ of bonds purchased allows for a higher deficit $g-\tau$ (\cite{waters2024potentiallypleasant}). 
+\end{result}
+\begin{result}
+    The greater the interest payments on the debt, the greater the benefit to monetary finance. If the term $R^{b}$ is small, a change in the parameter $\Omega$ has a modest impact. A low payment on the debt could arise due to a low level of the existing debt $b_{0}^{T}$ or a low steady state real rate $R$.
+\end{result}
+Secular stagnation, the long run fall in real rates, may be eroding the rationale for monetary finance.
+
+The inclusion of interest on reserves in the constraint (\ref{cons bc real ss fig}) allows for some further insights.
+\begin{result}
+    A higher value of $\alpha_{i}$ in the policy rule (\ref{ior}) raises the cost of interest on reserves, shifts the costs curve up, and leads to higher steady state inflation $\Pi$.
+\end{result}
+\begin{result}
+    For a given inflation target $\Pi$ and fraction of bonds purchased by the monetary authority $\Omega$, there is a trade-off between the costs to the government:  the fiscal deficit $g-\tau$ and the interest on reserves determined by $\alpha_{i}$. The higher the steady state fiscal deficit, the lower the interest on reserves must be and vice versa.
+\end{result}
+
+It is important to note that these are all steady state results, and short run intuitions could be different. In the short run, a monetary authority that buys bonds or lowers the policy rate can easily stimulate inflation due to liquidity effects. The fiscal authority might deviate from the steady state deficit but compensate in the future, a Ricardian policy. These points highlight the importance of credibility. For monetary finance to be beneficial, institutions must be sufficiently trusted for steady state values to be meaningful. Japan could be interpreted as such a country, but cases where monetary finance led to hyperinflation, such as those discussed in \textcite{sargent1982ends}, are cautionary tales. 
+
+\subsection{On the monetary policy rate}
+
+ Most countries claim to have a policy of monetary dominance, where fiscal authorities control deficits so that central banks can target inflation independently. Typically, monetary policy is described by a Taylor rules that includes a steady state natural rate of interest \textit{r-star} determined by the choice of inflation target, as in \textcite{Platanov2024flexpricedeterminacy}. In the present model, the steady state rate of inflation $\Pi$ and rate for interest on reserves $r^{n}$ are jointly determined by the fraction of bonds purchased by the monetary authority $\Omega$, the steady state deficit and the steady state rate of inflation according to the constraint (\ref{cons bc real ss}), along with the parameter $\alpha_{i}$. 
+ 
+ The relationship between the steady state rate on reserves $r^{n}$ and market rate $r$ is governed by the policy parameter $\alpha_{i}$ according to the steady state version of the interest rate rule (\ref{ior}).
+\begin{equation}
+  r^{n}=r^{\alpha_{i}} \label{ior ss}  
+\end{equation}
+
+The choices for the parameters $\Omega$ and $\alpha_{i}$ by the monetary policymaker impact the cost of the interest on the debt and the interest on reserves and, therefore, the steady state inflation rate. To achieve monetary dominance the fiscal authority would have to set the steady state deficit $g-\tau$ according those choices and the desired inflation target $\Pi$.
+
+The interest rate rule (\ref{ior}) and the steady state government budget constraint (\ref{cons bc real ss fig}) demonstrate the difference in short and long run dynamics with respect to inflation. The interest rate rule shows the short term conduct of policy where the policy would be raised in an attempt to reduce inflation above its steady state for $b_{\pi}>0$, which is necessary for stability, see Section 4.3. However, the steady state policy and inflation rates can move together due to exogenous shifts. Hence, an increase in the parameter $\alpha_{i}$ would increase the steady state inflation rate, but the resulting increase in the policy rate could lead to a short run decrease in inflation.
+
+\section{The Model}
+
+The next two sections develop a micro-founded model to demonstrate that the budget constraint (\ref{cons bc real}) and Assumptions 1-4 are consistent with household optimization. The model is a simplified version of a shopping time monetary model with a banking sector and interest on reserves as described in \textcite{ireland2014macroeconomics} that also allows for fiscal deficits, and liquidity services for the household are given solely by bank deposits. The model features five structural shocks -- to preferences, productivity, shopping time technology, deposit technology, and government spending -- each introduced below, in AR(1) form, at the point where the corresponding parameter enters the model.
+
+\subsection{Household Problem}
+
+The household utility is determined by consumption and the disutility from
+working and shopping time, which is alleviated by the liquidity service provided by
+bank deposits $D_{t}$. \textcite{ireland2014macroeconomics} includes a cash infusion each period that also provides liquidity services, but all transactions are electronic here. The household does hold currency as one source for deposits.
+
+The household enters time $t$ with currency held from
+the previous period $M_{t-1}$, bank loans taken $L_{t}$ and the return from the bond holdings $B_{t-1}$ with yield $r_{t}$, so%
+\begin{equation}
+D_{t}=M_{t-1}+L_{t}+B_{t-1}-\frac{B_{t}}{r_{t}}.  \label{HHBC1}
+\end{equation}%
+In period $t$, the household pays gross interest $r_{t}^{l}$ on the loans and
+receives gross interest $r_{t}^{d}$ on the deposits. Real consumption, the
+price level, wage, hours worked and lump sum taxes are $c_{t}$, $P_{t}$, $%
+W_{t},$ $h_{t},$ $\tau _{t}$. The household receives bank profits $E_{t}$ and firm profits $F_{t}$, though they do not enter the optimality decisions.
+Hence, the household decision must also satisfy%
+\begin{equation}
+P_{t}c_{t}=W_{t}h_{t}+r_{t}^{d}D_{t}-r_{t}^{l}L_{t}-M_{t}+F_{t}+E_{t}-P_{t}%
+\tau _{t}.  \label{HHBC2}
+\end{equation}
+
+The household maximizes%
+\begin{equation}
+E_{0}\sum\limits_{t=0}^{\infty } \beta ^{t} A_{t}\left[ \log{c}_{t}-\eta
+\left( \left(1+\psi\right)^{-1}h_{t}^{\left(1+\psi\right)}+h_{t}^{s}\right) \right] ,  \label{U}
+\end{equation}%
+where the discount factor is $\beta <1$, and the preference shock $%
+A_{t}=\exp a_{t}$ is such that%
+\begin{equation}
+a_{t}=\rho _{a}a_{t-1}+\varepsilon _{a,t} \text{ for }\varepsilon _{a,t}\sim
+iid\left( 0\right).
+\label{a}
+\end{equation}
+Shopping time is given by
+\begin{equation}
+h_{t}^{s}=\chi ^{-1}\left( \frac{v_{a,t}P_{t}c_{t}}{D_{t}}\right) ^{\chi }.
+\label{hs}
+\end{equation}%
+The parameter $v_{a}$ is positive and differentiates the disutility from
+working and disutility from shopping, and it is subject to a shopping time preference shock $v_{a,t}$ such that%
+\begin{equation}
+v_{a,t}=v_{a,t-1}^{\rho_{va}}v_{a}^{1-\rho_{va}}\exp(\varepsilon_{va,t}) \text{ for }\varepsilon_{va,t}\sim
+iid\left( 0\right).
+\label{va}
+\end{equation}%
+Again, all transactions are electronic so liquidity services
+are provided by deposits, which reduces shopping time for $\chi>0$.
+
+Writing the budget constraints (\ref{HHBC1}) and (\ref{HHBC2}), in real
+terms using the convention $x_{t}=\frac{X_{t}}{P_{t}}$ yields%
+\begin{eqnarray}
+d_{t} &=&m_{t-1}\Pi_{t}^{-1}+l_{t}+b_{t-1}\Pi_{t}^{-1}-b_{t}r_{t}^{-1}  \label{realBC1} \\
+c_{t} &=&w_{t}h_{t}+r_{t}^{d}d_{t}-r_{t}^{l}l_{t}-m_{t}+\frac{F_{t}}{P_{t}}+
+\frac{E_{t}}{P_{t}}-\tau _{t}, \label{realBC2}
+\end{eqnarray}%
+where gross inflation is $\Pi _{t}$ as above. 
+
+The objective (\ref{U}) at is maximized substituting for $h_{t}^{s}$
+using equation (\ref{hs}), subject to the budget constraints (\ref{realBC1}) and (\ref{realBC2}), with Lagrange
+multipliers $\lambda _{1,t}$ and $\lambda _{2,t}$. The following are the first order conditions with respect to
+$c_{t},h_{t},d_{t},l_{t},b_{t},m_{t}$.%
+\begin{eqnarray}
+\beta^{t}A_{t}\left(1-\eta \chi h_{t}^{s}\right) &=&\lambda _{2,t}c_{t} \label{foc c} \\
+\beta^{t}A_{t}\eta h_{t}^{\psi} &=&\lambda _{2,t}w_{t} \label{foc h} \\
+\beta^{t}A_{t}\eta \chi h_{t}^{s} &=&d_{t}\left(\lambda _{1,t}-\lambda
+_{2,t}r_{t}^{d}\right) \label{foc d} \\
+\lambda _{1,t} &=&\lambda _{2,t}r_{t}^{l} \label{foc l} \\
+\lambda _{1,t} &=& r_{t}E_{t}\left(\frac{\lambda _{1,t+1}}{\Pi_{t+1}}\right) \label{foc b}\\
+\lambda _{2,t} &=&E_{t}\left(\frac{\lambda _{1,t+1}}{\Pi _{t+1}}\right) \label{foc m}
+\end{eqnarray}
+
+An immediate consequence of conditions (\ref{foc l}), (\ref{foc b}) and (\ref{foc m}) is the arbitrage condition that the rate on bonds and the rate on loans must be the same.
+\begin{equation}
+r^{l}_{t}=r_{t} \label{arb r}
+\end{equation}
+
+\subsection{The Euler equation}
+
+An Euler equation is derived from the dynamic model, and the steady state version is consistent with Assumption 2. Solving out the Lagrange multipliers from the household optimization equations (\ref{foc h}), (\ref{foc b}), (\ref{foc l}), and using the interest rate arbitrage relationship (\ref{arb r}) gives the following.
+
+\begin{equation}
+    \beta E_{t}\left(\frac{r_{t+1}}{\Pi_{t+1}}\left(\frac{h_{t+1}}{h_{t}}\right)^{\psi}\frac{w_{t}}{w_{t+1}}\frac{A_{t+1}}{A_{t}}\right)=1 
+    \label{Euler}
+\end{equation}
+The steady state version is
+\begin{equation}
+    \beta r\Pi^{-1}=1, \label{Euler ss}
+\end{equation}
+so the steady state real interest rate depends only on the constant discount factor $R=\beta^{-1}$, satisfying Assumption 2.
+
+\subsection{Firm decision}
+
+The production sector is standard and includes a competitive final goods
+producing firms and monopolistically competitive intermediate goods
+producing firms with quadratic price adjustment cost a l\`a  Rotemberg \textcite{rotemberg1982stickyprices}.
+Final goods $y_{t}$ are produced with constant returns to scale combinations
+of intermediate goods $y_{t}\left( j\right) $ with price $P_{t}\left(
+j\right) $, where the parameter $\theta $ represents the degree of
+complementarity.%
+\[
+y_{t}=\left(\int\nolimits_{0}^{1}y_{t}\left( j\right)^{\dfrac{\theta-1}{%
+\theta}}dj\right)^{\dfrac{\theta}{\theta-1}} 
+\]%
+Profits for the final goods firm is therefore%
+\[
+P_{t}\left( \int\nolimits_{0}^{1}y_{t}\left( j\right) ^{\dfrac{\theta -1}{%
+\theta }}dj\right) ^{\dfrac{\theta }{\theta -1}}-\int\nolimits_{0}^{1}P_{t}%
+\left( j\right) y_{t}\left( j\right) dj, 
+\]%
+so the demand for an intermediate good is given by%
+\[
+y_{t}\left( j\right) =\left( \frac{P_{t}\left( j\right) }{P_{t}}\right)
+^{-\theta }y_{t}, 
+\]%
+and the final goods price level is
+\[
+P_{t}=\left( \int\nolimits_{0}^{1}P_{t}\left( j\right) ^{1-\theta
+}dj\right) ^{\dfrac{1}{1-\theta }}.
+\]
+Intermediate goods production is determined by labor $h_{t}^{g}$ and productivity $z_{t}$.
+\begin{equation}
+y_{t}=z_{t}h_{t}^{g} \label{prod} \\
+\end{equation}%
+Productivity is subject to a stochastic shock around its steady state value $z$,
+\begin{equation}
+z_{t}=z_{t-1}^{\rho_{z}}z^{1-\rho_{z}}\exp(\varepsilon_{z,t}) \text{ for }\varepsilon_{z,t}\sim
+iid\left( 0\right).
+\label{z}
+\end{equation}%
+
+They also face the cost of adjusting prices%
+\[
+caj_{t}=\frac{\phi _{p}}{2}\left( \frac{P_{t}\left( j\right) }{\Pi
+P_{t-1}\left( j\right) }-1\right) ^{2} y_{t}, 
+\]%
+where the parameter $\phi _{p}>0$ is positive and the steady state gross inflation
+rate is $\Pi $.
+
+Using the above relations, the time $t$ real profit for a representative
+intermediate goods firm is%
+\[
+\frac{F_{t}\left( j\right) }{P_{t}}=\left( \frac{P_{t}\left( j\right) }{P_{t}%
+}\right) ^{1-\theta }y_{t}-\left( \frac{P_{t}\left( j\right) }{P_{t}}\right)
+^{-\theta }\frac{y_{t}}{z_{t}}\frac{W_{t}}{P_{t}}-\frac{\phi _{p}}{2}\left(
+\frac{P_{t}\left( j\right) }{\Pi P_{t-1}\left( j\right) }%
+-1\right) ^{2}y_{t}.
+\]%
+Maximizing the discounted sum of future profits%
+\[
+E_{0}\sum\limits_{t=0}^{\infty }\beta ^{t}\frac{F_{t}\left( j\right) }{P_{t}%
+},
+\]%
+the first order condition with respect to $P_{t}\left( j\right) $ gives the
+following.%
+
+
+\begin{equation} \label{PC}
+\begin{split}
+0 &=\left( 1-\theta \right) \left( \frac{P_{t}\left( j\right) }{P_{t}}%
+\right) ^{-\theta }\frac{y_{t}}{P_{t}}+\theta \left( \frac{P_{t}\left(
+j\right) }{P_{t}}\right) ^{-\theta -1}\frac{y_{t}}{z_{t}P_{t}}\frac{W_{t}}{%
+P_{t}} \\
+&-\phi _{p}\left( \frac{P_{t}\left( j\right) }{\Pi
+P_{t-1}\left( j\right) }-1\right) \frac{y_{t}}{\Pi
+P_{t}\left( j\right) } \\
+&+\beta \phi _{p}E_{t}\left[ \left( \frac{P_{t+1}\left( j\right) }{\Pi P_{t}\left( j\right) }-1\right) \left( \frac{P_{t+1}\left(
+j\right) }{\Pi P_{t}^{2}\left( j\right) }\right) y_{t+1}%
+\right] .
+\end{split}
+\end{equation}
+
+For a symmetric equilibrium where $P_{t}(j)=P_{t}$ for all $j$, the real profit is
+\begin{equation} \label{real profit sym}
+\frac{F_{t}}{P_{t}}=\left(1-w_{t}z_{t}^{-1}\right)y_{t}-caj(\Pi_{t})y_{t}
+\end{equation}
+where the real values of the wage and output are $w_{t},y_{t}$, and the cost of adjustment is a function of inflation.
+\[
+caj(\Pi_{t})=\frac{\phi_{p}}{2}\left(\frac{\Pi_{t}-\Pi}{\Pi_{t}}\right)^{2}
+\]
+
+The symmetric equilibrium for the optimality condition (\ref{PC}) is
+\begin{equation} \label{PCsym}
+\begin{split}
+0 &=1-\theta+\theta(w_{t}z_{t}^{-1})-\frac{\phi_{p}}{2}\left(\frac{\Pi_{t}-\Pi}{\Pi}\right)\left(\frac{\Pi_{t}}{\Pi}\right) \\
+&+\beta\phi_{p}E_{t}\left[\frac{y_{t+1}}{y_{t}}\left(\frac{\Pi_{t+1}-\Pi}{\Pi}\right)\left(\frac{\Pi_{t+1}}
+{\Pi}\right)\right]
+\end{split}
+\end{equation}
+A log-linearized version has the form of a standard New Keynesian
+Phillips Curve.
+
+The resource constraint for the economy is
+\begin{equation} \label{ycg}
+    y_{t}=c_{t}+g_{t}+caj(\Pi_{t})y_{t}.
+\end{equation}
+
+\subsection{Banking Sector}
+
+Banks take deposits and make loans while holding reserves. The technology
+for generating both deposits and reserves requires labor input following
+\textcite{christiano1995inside} and \textcite{ireland2014macroeconomics}.
+
+Servicing real deposits $d_{t}=\dfrac{D_{t}}{P_{t}}$ requires both real reserves $n_{t}=\dfrac{N_{t}}{P_{t}}$ and
+labor $h_{t}^{d}$ according to
+\begin{equation} \label{d}
+x_{a,t}\left( x_{n}^{\frac{1}{\nu }}n_{t}^{\frac{\nu -1}{\nu }}+\left(
+1-x_{n}\right) ^{\frac{1}{\nu }}h_{t}^{d^{\frac{\nu -1}{\nu }}}\right) ^{%
+\frac{\nu }{\nu -1}}\geq d_{t}.
+\end{equation}
+
+The parameter $\nu $ is the elasticity of substitution between the two
+inputs and the parameter $x_{n}$ measures their relative importance. The overall deposit technology term is subject to a stochastic shock around its steady state value $x_{a}$,
+\begin{equation}
+x_{a,t}=x_{a,t-1}^{\rho_{xa}}x_{a}^{1-\rho_{xa}}\exp(\varepsilon_{xa,t}) \text{ for }\varepsilon_{xa,t}\sim
+iid\left( 0\right).
+\label{xa}
+\end{equation}%
+
+Servicing reserves also requires labor $h_{t}^{n}$ such that for a positive $%
+\phi _{n}>0,$%
+\begin{equation} \label{hn}
+h_{t}^{n}\geq \phi _{n}n_{t}.
+\end{equation}
+Banks maximize real profits where they generate returns from loans and reserves and have costs
+from wages and returns to depositors.
+\begin{equation} \label{bank profits}
+\frac{E_{t}}{P_{t}}=\left( r_{t}^{l}-1\right) l_{t}+\left(
+r_{t}^{n}-1\right) n_{t}-\left( r_{t}^{d}-1\right) d_{t}-w_{t}h_{t}^{b}
+\end{equation}%
+The total labor employed by the bank $h_{t}^{b}$ is the sum of those
+employed to service deposits and reserves. 
+\begin{equation} \label{hb}
+h_{t}^{b}=h_{t}^{d}+h_{t}^{n}
+\end{equation}
+The timing in the profits relation (\ref{bank profits}) is the same as with the household budget constraints (\ref{HHBC1}) and (\ref{HHBC2}) and the description of reserves after the budget constraint for the monetary authority (\ref{CB BC}).
+
+Total labor supplied $h_{t}$ is the sum of that provided for goods production and banking.
+\begin{equation} \label{h}
+h_{t}=h_{t}^{g}+h_{t}^{b}
+\end{equation}
+Bank assets equal liabilities so
+\begin{equation} \label{dnl}
+d_{t}=n_{t}+l_{t}.
+\end{equation}
+
+By substituting for $l_{t}$ and $d_{t}$ with equations (\ref{d}), (\ref{dnl}) and (\ref{hn}), bank profits (\ref{bank profits}) can be written in term of $n_{t}$ and $h_{t}^{d}$.
+\begin{equation}
+\begin{split}
+\frac{E_{t}}{P_{t}}& =(r_{t}^l-r_{t}^d)x_{a,t}\left[x_{n}^{1/\nu}n_{t}^{\frac{\nu-1}{\nu}}+(1-x_{n})^{1/\nu}(h_{t}^{d})^{\frac{\nu-1}{\nu}}\right]^{\frac{\nu}{\nu-1}} \\
+&-(r_{t}^{l}-r_{t}^{n}+\phi_{n}w_{t})n_{t}-w_{t}h_{t}^{d}
+\end{split}
+\end{equation}
+
+Maximizing bank profits, the first order conditions with respect to $n_{t}$ and $h_{t}^{d}$ follow.
+\begin{eqnarray}
+  n_{t}=(r^l_{t}-r^d_{t})^{\nu}x_{a,t}^{\nu-1}x_{n}d_{t}(r^{l}_{t}-r^{n}_{t}+\phi_{n}w_{t})^{-\nu}  \label{foc n} \\
+  h^{d}_{t}=(r^l_{t}-r^d_{t})^{\nu}x_{a,t}^{\nu-1}(1-x_{n})d_{t}w_{t}^{-\nu},  \label{foc hd}
+\end{eqnarray}
+
+The quantities $n_{t}$ and $h_{t}^{d}$ must be positive, which implies that the interest rate on loans must be greater than that on deposits, $r^l>r^d$, matching the usual intuition for the way banks make profits. See \textcite{ireland2014macroeconomics} for a detailed discussion of the optimal choices by the bank.
+
+\subsection{Equilibrium Household Budget Constraints}
+
+Given the optimizing behavior for households, firms and banks, the two household budget constraints can be written in terms of currency $m_{t}$ and reserves $n_{t}$. The combination of those two is equivalent to the consolidated government budget constraint (\ref{cons bc real}).
+
+In equilibrium, the real quantities $b_{t}$, $m_{t}$, and $n_{t}$, are equal to the corresponding quantities in the budget constraints in Section 2. Substituting for real bank profits (\ref{bank profits}) in the household budget constraint (\ref{realBC2}) and firm profits (\ref{real profit sym}), while labor is split between goods production and banking (\ref{h}) yields
+\[c_{t}=w_{t}h_{t}^{g}+d_{t}-l_{t}-m_{t}+\left(
+r_{t}^{n}-1\right) n_{t}-\tau_{t}.\]
+Using the production function (\ref{prod}), the resource constraint (\ref{ycg}) and the bank balance sheet condition (\ref{dnl}), the above constraint becomes
+\begin{equation}
+    m_{t}=g_{t}-\tau_{t}+r^{n}_{t}n_{t}.
+    \label{HH BC m}
+\end{equation}
+Similarly, the first household budget constraint (\ref{realBC1}) with the bank condition (\ref{dnl}) can be written
+\begin{equation}
+    n_{t}=m_{t-1}\Pi_{t}^{-1}+b_{t-1}\Pi_{t}^{-1}-b_{t}r_{t}^{-1}.
+    \label{HH BC n}
+\end{equation}
+Adding the above two equations (\ref{HH BC m}) and (\ref{HH BC n}) yields,
+\begin{equation} \label{policy BC}
+m_{t}-\frac{m_{t-1}}{\Pi_{t}}=g_{t}-\tau_{t}+\frac{b_{t-1}}{\Pi_t}-\frac{b_{t}}{r_{t}}+\left(r_{t}^{n}-1\right) n_{t},
+\end{equation}
+which is equivalent to the consolidated budget constraint (\ref{cons bc real}).
+
+\subsection{Policy}
+
+The policy specification allows for active monetary and passive fiscal policy. The fiscal authority responds to the monetary authority in the sense that bonds are issued in time $t$ without knowledge of the currency supply $M_{t}$. Government spending $g_{t}$ is exogenous and stochastic, fluctuating around its steady state value $g$ according to
+\begin{equation}
+g_{t}=\rho_{g}g_{t-1}+(1-\rho_{g})g+\varepsilon_{g,t} \text{ for }\varepsilon_{g,t}\sim
+iid\left( 0\right).
+\label{g}
+\end{equation}%
+Taxes $\tau_{t}$ respond to push the real debt $b_{t}$ toward its steady state $b=(1-\Omega)b_{0}^{T}$ as in Assumption 1 and \textcite{eusepi2018fiscal} and is subject to the mean zero \textit{iid} shock $\varepsilon^\tau_t$. 
+\begin{equation}
+   \tau_t = \tau_{t-1}^{\rho_\tau}\,\bar\tau^{1-\rho_\tau}
+\Big(\frac{b_{t-1}}{(1-\Omega)b_0^{T}}\Big)^{\phi_b} e^{\varepsilon^\tau_t}
+    \label{tau}
+\end{equation}
+The model is closed with the budget conditions (\ref{HH BC m}) and (\ref{HH BC n}) and an equation for bond issuance.
+\begin{equation}
+    b_t = \frac{r}{\Pi}b_{t-1} + g_t - \tau_t + b_0^{T}\left(1-\frac{r}{\Pi}\right) - (g-\bar\tau)
+    \label{b issue}
+\end{equation}
+
+\section{Estimation}
+
+\subsection{Model Summary}
+
+Model parameters are estimated with Bayesian methods. The model in Section 3 describes the evolution of the 17x1 vector of endogenous variables
+\[X_{t}=(y_{t},c_{t},d_{t},n_{t},\Pi_{t},r_{t},r^{d}_{t},r^{n}_{t},h_{t},h^{g}_{t},h^{d}_{t},h^{n}_{t},h^{s}_{t},w_{t},\tau_{t},b_{t},m_{t})'. 
+\]
+Throughout the following specification, the bank balance sheet condition (\ref{dnl}) is used to substitute for $l_{t}$ and the arbitrage condition $r_{t}=r^{l}_{t}$ from (\ref{arb r}) is used to substitute for the interest rate on loans $r^{l}_{t}$.
+
+The conditions describing household behavior include the specification for shopping time (\ref{hs}) and the optimality condition determined by equations (\ref{foc c}) and (\ref{foc h}) with the added labor supply shock $\varepsilon^L_t$.
+\begin{equation}
+    \chi h^{s}_{t}+\frac{c_{t}}{w_{t}}h_{t}^{\psi}=\eta^{-1}\exp(\varepsilon^L_t).
+    \label{HH opt labor}
+\end{equation}
+In addition, there is the Euler equation (\ref{Euler}) and the condition derived by solving the Lagrange multipliers out equations (\ref{foc h}), (\ref{foc d}) and (\ref{foc l})
+\begin{equation*}
+    (r_{t}-r^{d}_{t})h_{t}^{\psi}d_{t}=  \chi w_{t}h^{s}_{t}.
+\end{equation*}
+The model also includes the production function (\ref{prod}), the Phillips Curve (\ref{PC}), the resource constraint (\ref{ycg}), as well as the banking conditions (\ref{d}), (\ref{foc n}), (\ref{foc hd}), (\ref{hn}) and the labor identity from combining (\ref{hb}) and (\ref{h}).
+\begin{equation*}
+    h_{t}=h^{g}_{t}+h^{d}_{t}+h^{n}_{t}
+\end{equation*}
+
+The interest rate rule (\ref{ior}) for monetary policy is altered to incorporate the ZLB, a response to output, and the shocks $z^r_t$.
+\begin{equation}
+  r^n_t = \max\!\Big[1,\; (r_t)^{a_i}\Big(\frac{\pi_t}{\pi}\Big)^{b_\pi}
+\Big(\frac{y_t}{y}\Big)^{b_y} e^{z^r_t}\Big]  
+\label{rn ZLB}
+\end{equation}
+Note that the steady steady for this interest rate rule is still governed by the same relation (\ref{ior ss}).
+
+Fiscal policy is given by equations (\ref{g}), (\ref{tau}), and (\ref{b issue}).
+
+\subsection{Data}
+
+The model is estimated on seven quarterly series for U.S. data 2009Q1-2025Q4, the era of targeting the interest rate on reserves. Table \ref{tab:data} summarizes the construction of the series. The transformed variable $bT_t = \frac{b_t}{1+g}$ is introduced to match the debt-to-GDP data $bT_{t}^{obs}$. Measurement error terms are included with all the observables for the estimation.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Observable & FRED series & Transformation \\
+\midrule
+$y^{obs}$ (output) & \texttt{GDPC1} / \texttt{OPHNFB} &
+  $\log(\text{GDPC1}/\text{OPHNFB})$ \\
+$d^{obs}$ (deposits) & \texttt{DPSACBW027SBOG} / \texttt{OPHNFB} &
+  $\log(\text{Deposits}/\text{OPHNFB})$ \\
+$\pi^{obs}$ (inflation) & \texttt{GDPDEF} &
+  $\log(\text{GDPDEF}_t/\text{GDPDEF}_{t-1})$ \\
+$r^{obs}$ (loan rate) & \texttt{BAA} &
+  $\log(1+\text{BAA}_q/400)$ \\
+$r^{n,obs}$ (policy rate) & \texttt{FEDFUNDS} &
+  $\log\!\big((1+\text{FEDFUNDS}/100)^{0.25}\big)$ \\
+$\tau^{obs}$ (tax rate) & \texttt{FGRECPT} / \texttt{GDP} &
+  $\log(\text{Tax receipts}/\text{Nominal GDP})$\\
+$bT^{obs}$ (debt/GDP) & \texttt{FYGFDPUN} / \texttt{GDP} &
+  $\log\big((\text{FYGFDPUN}/1000)/\text{GDP}\big)$\\
+\bottomrule
+\end{tabular}
+\caption{Observable construction. \texttt{OPHNFB} is nonfarm business
+sector output per hour (labor productivity), used to detrend output and
+deposits. \texttt{BAA} is Moody's Seasoned Baa Corporate Bond Yield. \texttt{FYGFDPUN} is Federal Debt Held by the Public. All series are demeaned.}
+\label{tab:data}
+\end{table}
+
+Data for currency and reserves is deliberately excluded. There are multiple institutional factors driving those series, such as changes in liquidity requirements, as documented in \textcite{Duffie2026}. Those factors would need to be modeled to include such data.
+
+Table \ref{tab:shocks} in Appendix \ref{app: calib} summarizes the stochastic elements of the model including the structural elements described above and the measurement errors.
+
+\subsection{Calibration}
+
+Table \ref{tab:calib} shows the values of calibrated (non-estimated) parameters. Many are taken from \textcite{ireland2014macroeconomics}, which has a model where the monetary policymaker targets the interest rate on reserves. The banking parameter value $x_{n}=0.95$ is set higher than in \textcite{ireland2014macroeconomics} to achieve an value for labor hours in deposit creation $h^{d}$ in line with the other labor hours steady state values. 
+
+The steady state share of government spending $g=0.2$ and the choice of the steady state tax share $\tau=0.14$ so that the deficit share 0.06 matches the mean over the sample. For the initial calibration, the value $\Omega=0.0$ reflects current policy, since most central banks do not systematically purchase bonds. 
+
+The discount factor $\beta$ determines the steady-state real interest rate through the Euler equation $r=\pi \beta$.
+The discount factor is chosen according to the preliminary steady states in the table $\pi$ and $r$, which are chosen to ensure that the deposit rate remains above the ZLB, $r^{d}>1$. The persistence parameters $\rho_{a},\rho_{va}$ are fixed to avoid unit roots during the estimation. The household objective parameter value and $\psi=1.3$ are taken from the DSGE model of the Federal Reserve Bank of New York, \textcite{frbny_dsge_model}, but the parameter $\chi=0.5$ is chosen according to the preliminary steady state inflation target.
+
+\subsection{Methodology and Results}
+
+The estimation accounts for the ZLB and the shock to labor supply during COVID-19. The model is estimated using the Metropolis--Hastings algorithm implemented in Dynare~7 (\textcite{adjemian2011dynare}. The ZLB on the policy rate $r^{n}_{t}$ in equation (\ref{rn ZLB}) is imposed using the OccBin piecewise linear solution methodology described in \textcite{GuerrieriIacoviello2015}. COVID-19 is modeled with a one period negative shock in 2020Q2 to $\varepsilon^L_t$ in equation (\ref{HH opt labor}).
+
+Figure \ref{fig:priorpost} shows the prior and posterior distributions for the policy parameters. The priors are chosen to be as difuse as possible so that the posteriors are informative. With such priors, the jumping distribution determined by the Hessian works best. 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{prior_posterior_covid_bT_baa.pdf}
+\caption{Prior (dashed red) and posterior (solid blue) densities for the
+policy parameters $b_\pi$, $b_y$, $a_i$, and $\phi_b$, current
+(diffuse-prior) round. Dotted vertical lines mark the posterior mean.}
+\label{fig:priorpost}
+\end{figure}
+
+The posterior distributions are not determined by the priors and give informative mean values, reported in Table \ref{tab:posteriors} in Appendix \ref{app: est}. The estimates $b_{\pi}=3.474$ and $\phi_{b}=0.069$ indicated a combination of active monetary policy and passive fiscal policy. Fiscal policy acts to stabilize the deficit, as $\phi_{b}>0$, so that monetary policy is free to fight inflation, a combination most governments claim to follow. The magnitude of the response to inflation far exceeds the Taylor principle ($b_{\pi}>1$) guarantees determinacy and expectational stability\footnote{See Appendix \ref{app: exp stability} for details.} for any positive $b_{y}$, see Figure \ref{fig:detestab} in Appendix \ref{app: est}. Even in the face of two major recessions and elevated inflation 2021Q2-2023Q2, policy appears to be stabilizing.
+
+However, the average inflation level away from the ZLB is somewhat elevated so policymakers are not blameless. The associated annualized rates are intuitive, see Table \ref{tab:ss} in Appendix \ref{app: est}. The steady inflation rate 3.63\% is higher than the target 2\%, but that is not surprising considering that the sample includes the high inflation episode 2021Q2-2023Q2.
+
+Figure \ref{fig:detestab} shows that the Taylor Principle $b_{\pi}>1$ is a good guide to the requirements for stability given passive fiscal policy, which is similar to results in  \textcite{Platanov2024flexpricedeterminacy}, \textcite{bullardmitra02} and \textcite{eusepi2018fiscal}. A pegged policy rate $r^{n}_{t}=r^{n}$, when $b_{\pi}=0$ does not achieve stability, following \textcite{friedman1968role}, \textcite{howitt1992interest}, and \textcite{evans2018interest}. 
+
+Despite the data limitation--there are 68 data points for an estimation that includes two major recessions and an extended a number of periods at the ZLB--the estimation diagnostics are good. The posteriors are concentrated around the means, and the estimates of all the policy parameters converge with one exception ($\alpha_{i}$, run 1) according to the \textcite{Geweke1992} criterion, see Table \ref{tab:geweke} in Appendix \ref{app: est}. The stability results appear to be robust across the 0.9 HPD interval for $\phi_{b}$.
+
+\section{Steady State Relationships}
+
+The estimated model allows for a quantitative analysis of the relationships described in the steady state budget constraint (\ref{cons bc real ss fig}). The ultimate goal is to show the trade-off between the steady state fiscal deficit $g-\tau$ and the monetary policy parameter $\alpha_{i}$, which determines the cost of the interest on reserves, for a given inflation target $\Pi$, as described in Result 6.
+
+\subsection{Deficits versus Inflation}
+
+Figure \ref{fig:Pim} verifies the relationships between the deficit and inflation as in Result 1 and the relationship between inflation and money in Assumption 3. Values of the real tax $\tau$ range from 0.3 to 0.0, which translates into an increasing fiscal deficit $g-\tau$ on the horizontal axis. Inflation $\Pi$ rises with the deficit while currency $m$ falls. The analogous graphs for reserves are very similar, so the model is consistent with Assumptions 3 and 4. Steady state deposits are decreasing with inflation as well.
+
+\begin{figure}[h]
+\centering 
+        \includegraphics[width=9cm]{Fig 2.png}    
+    \caption{The upward sloping steady state inflation $\Pi$ and downward sloping steady state currency $m$ are functions of the fiscal deficit $g-\tau$. The net debt $b=(1-\Omega)b^{T}_{0}$ takes values according to $\Omega=0.0, 0.5, 1.0$ and $b^{T}_{0}=1.0$.}
+       \label{fig:Pim}
+\end{figure}
+
+The benefit of the monetary authority purchasing bonds is apparent. The net debt $(1-\Omega)b^{T}_{0}$ varies with the choice of $\Omega$. The existing debt is set to $b^{T}_{0}=1.0$, or 100\% of output, and the fraction purchased by the monetary authority is set to 0.0, 0.5 and 1.0. Higher values of $\Omega$ give lower net debt and lower steady state inflation rates, as in Result 3.
+
+\renewcommand{\arraystretch}{1.75} 
+
+\begin{table}[h]
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrccccccccccc}
+\hline
+                                                         & \multicolumn{1}{l}{}  & \multicolumn{11}{c}{\large{\textbf{$g-\tau$}}}                                                                                                                                                                                                                                                                                                                                                                                                                                                            \\ \hline
+\multicolumn{1}{l}{}                                    & \multicolumn{1}{l}{}  & \multicolumn{1}{c}{\textit{\textbf{-0.04}}} & \multicolumn{1}{c}{\textit{\textbf{-0.03}}} & \multicolumn{1}{c}{\textit{\textbf{-0.02}}} & \multicolumn{1}{c}{\textit{\textbf{-0.01}}} & \multicolumn{1}{c}{\textit{\textbf{0.0}}} & \multicolumn{1}{c}{\textit{\textbf{0.01}}} & \multicolumn{1}{c}{\textit{\textbf{0.02}}} & \multicolumn{1}{c}{\textit{\textbf{0.03}}} & \multicolumn{1}{c}{\textit{\textbf{0.04}}} & \multicolumn{1}{c}{\textit{\textbf{0.05}}} & \textit{\textbf{0.06}} \\ \hline
+\multicolumn{1}{l}{\multirow{5}{*}{\large{\textbf{$\Omega$}}}} & \textit{\textbf{0.0}}  & \multicolumn{1}{c}{0.46}                    & \multicolumn{1}{c}{0.79}                    & \multicolumn{1}{c}{1.14}                    & \multicolumn{1}{c}{1.52}                    & \multicolumn{1}{c}{1.92}                & \multicolumn{1}{c}{2.34}                   & \multicolumn{1}{c}{2.79}                   & \multicolumn{1}{c}{3.26}                   & \multicolumn{1}{c}{3.76}                   & \multicolumn{1}{c}{4.28}                   & 4.83                   \\ \cline{2-13}
+\multicolumn{1}{l}{}                                   & \textit{\textbf{0.25}} & \multicolumn{1}{c}{0.20}                    & \multicolumn{1}{c}{0.52}                    & \multicolumn{1}{c}{0.86}                    & \multicolumn{1}{c}{1.22}                    & \multicolumn{1}{c}{1.60}                & \multicolumn{1}{c}{2.00}                   & \multicolumn{1}{c}{2.43}                   & \multicolumn{1}{c}{2.88}                   & \multicolumn{1}{c}{3.36}                   & \multicolumn{1}{c}{3.86}                   & 4.39                   \\ \cline{2-13}
+\multicolumn{1}{l}{}                                   & \textit{\textbf{0.5}}  & \multicolumn{1}{c}{-0.03}                   & \multicolumn{1}{c}{0.27}                    & \multicolumn{1}{c}{0.59}                    & \multicolumn{1}{c}{0.93}                    & \multicolumn{1}{c}{1.29}                & \multicolumn{1}{c}{1.68}                   & \multicolumn{1}{c}{2.09}                   & \multicolumn{1}{c}{2.52}                   & \multicolumn{1}{c}{2.98}                   & \multicolumn{1}{c}{3.46}                   & 3.97                   \\ \cline{2-13}
+\multicolumn{1}{l}{}                                   & \textit{\textbf{0.75}} & \multicolumn{1}{c}{-0.26}                   & \multicolumn{1}{c}{0.02}                    & \multicolumn{1}{c}{0.33}                    & \multicolumn{1}{c}{0.65}                    & \multicolumn{1}{c}{1.00}                & \multicolumn{1}{c}{1.37}                   & \multicolumn{1}{c}{1.76}                   & \multicolumn{1}{c}{2.17}                   & \multicolumn{1}{c}{2.61}                   & \multicolumn{1}{c}{3.07}                   & 3.56                   \\ \cline{2-13}
+\multicolumn{1}{l}{}                                   & \textit{\textbf{1.0}}  & \multicolumn{1}{c}{-0.47}                   & \multicolumn{1}{c}{-0.21}                   & \multicolumn{1}{c}{0.08}                    & \multicolumn{1}{c}{0.39}                    & \multicolumn{1}{c}{0.72}                & \multicolumn{1}{c}{1.07}                   & \multicolumn{1}{c}{1.44}                   & \multicolumn{1}{c}{1.84}                   & \multicolumn{1}{c}{2.26}                   & \multicolumn{1}{c}{2.70}                   & 3.17                   \\ \hline
+\end{tabular}
+\vspace{3mm}
+\caption{Steady State inflation rates as simple annual percentages for given deficits $g-\tau$ and fractions $\Omega$ of debt purchased by the monetary authority. The parameter $\alpha_{i}=0.1808$, the current posterior mean (updated from the previous calibrated value 0.3; $v_a$ and $\eta$ also updated to their posterior means, 2.8899 and 1.1363).}
+\label{tab:inf}
+\end{table}
+
+\renewcommand{\arraystretch}{1.0}
+
+\begin{figure}[h]
+\centering
+    \includegraphics[width=10cm]{Fig 53.png}
+    \caption{Steady state seigniorage $s^{m}$, interest on debt $R^{b}$ and interest on reserves $R^{n}$ as a function of inflation $\Pi$, for taxes $\tau$ varying from 0.3 to 0.0. The fraction of bonds purchased by the monetary authority is set to zero, $\Omega=0.0$.}
+    \label{Fig53}
+\end{figure}
+
+Table \ref{tab:inf} shows the annualized simple inflation rates $\Pi-1$ for varying levels of the fraction $\Omega$ and the deficit $g-\tau$. Starting from a deficit of 0.04, or 4\% of GDP, and no debt purchased by the monetary authority $\Omega=0.0$ where inflation is 3.76\%, the benefit of switching to an MMT policy $\Omega=1.0$ would be a 1.5\% drop in inflation. 
+
+\subsection{Seigniorage, interest on the debt and interest on reserves versus inflation}
+
+Figure \ref{fig:1} in Section 2 represents the constraint (\ref{cons bc real ss fig}), which contains much of the intuition. Figure \ref{Fig53} shows steady state seigniorage, interest on the debt and interest on reserves as functions of inflation for the calibrated model. Again, the driving factor is a decrease in taxes, so the deficit $g-\tau$ is not included on the graph. One can think of the curves in Figure \ref{Fig53} as intersections with an increasing deficit line in Figure \ref{fig:1}.
+
+Figure \ref{Fig53} shows the case without debt purchases by the monetary authority $\Omega=0.0$, so the interest on the net debt $R^{b}$ is positive. It is declining with inflation as shown by the specification in Section 2, but the slope is barely discernible on the graph. The slope of the interest on reserves curve $R^{n}$ is positive but less than the seigniorage curve $s^{m}$ near equilibrium inflation, as required. In the case under the MMT policy where the monetary authority buys all the bonds $\Omega=1.0$, the graph is very similar, but the interest on the debt $R^{b}$ is constant at zero, since the public holds none of the bonds.
+
+\subsection{Targeting Inflation}
+
+Steady state inflation is increasing with any parameter that directly affects a cost to the government, including the deficit $g-\tau$ and the monetary policy parameters $\alpha_{i}$, which determines the steady state interest rate on reserves $r^{n}$. Figure \ref{Fig56} shows the combinations $(g-\tau,\alpha_{i})$ that give steady state simple inflation levels of 2\% and 4\%, for both cases $\Omega=0.0,1.0$. There is a non-linear trade-off between the cost of the deficit and the cost of interest on reserves, reflecting Result 6. For a given inflation target, the higher the deficit, the lower the steady state interest on reserves must be and vice versa. Monetary finance, a higher $\Omega$, allows for higher costs for the same inflation target.
+
+\begin{figure}[h]
+    \includegraphics[width=10cm]{Fig 56.png}
+    \caption{The plots are  combinations $(g-\tau,\alpha_{i})$ that give steady state simple inflation levels of 2\% and 4\% in the cases of full monetary finance and no monetary finance. The two dots represent the 2\% inflation case where $\alpha_{i}=0.19$, which corresponds to $r^{n}=1.01$.}
+    \label{Fig56}
+\end{figure}
+
+A simple example shows the maximum benefit of monetary finance. If the inflation target is 2\% and a steady state rate on reserves of 1\% (simple, annual for both) translates to the value $\alpha_{i}=0.19$. Without any monetary finance $\Omega=0.0$, a balanced budget is required, $g-\tau=0.0$, represented by the large dot on the left in Figure \ref{Fig56}. For the same inflation target and policy rate, switching to full monetary finance, where $\Omega=1.0$, allows for a fiscal deficit $g-\tau=0.03$. So the switch to full monetary finance allows for an increase in the steady state deficit of 3\%, which is the saving from avoiding the interest on the debt, following Result 3.
+
+The 3\% increase in the deficit made possible by full monetary finance is the real interest on the debt $R^{b}$ in equation \ref{cons bc real ss fig} and Figure \ref{fig:1}. If the fraction of bonds $\Omega$ changes from zero to one, the $R^{b}$ term is eliminated. To maintain the same steady state inflation rate $\Pi^{*}$, the deficit $g-\tau$ must rise by $R^{b}(\Pi)=b_{0}(1-R^{-1})\Pi^{*^{-1}}$.
+
+\subsection{Discussion}
+
+MMT advocates raise an important point about the benefits of monetary finance. However, there are a number of reasons for caution, particularly concerning their focus on full monetary finance, which would eliminate the debt held by the public. Partial monetary finance in combination with targeting the interest rate on reserves is potentially beneficial, particularly for countries with a high burden from the interest on their debt.
+
+Monetary finance leads to lower inflation or allows higher sustainable government cost, but it must be emphasized that these results come from steady state analysis. Suggestions that the interest on the debt can be eliminated (\textcite{globerman2021mmt}) immediately are not correct. Decades of experience with monetary policy conducted through open market operations indicate that, if the Federal Reserve were to buy all the outstanding U.S. debt over a short period of time, higher inflation would almost certainly result to due to liquidity effects. A switch to monetary financing should not be done quickly.
+
+The existing U.S. debt is the largest stock of safe assets and is an important part of the world financial market. Full monetary finance eliminates the bond market. MMT advocates say that the government should still issue bonds (\cite{mitchell2019mmt}), but there is little discussion about the quantity or the use of the funds raised. As \textcite{Woodford90debt}, \textcite{AIYAGARI98debt} and \textcite{brunnermeier2020bubble} show, government debt provides safe assets that help overcome financial market imperfections. A government is not required to pay off the existing debt and may have good reason not to. For example, Norway maintains a debt of over 30\%  of GDP though its sovereign wealth fund could buy all of it.
+
+\textcite{AIYAGARI98debt} compute the optimal debt level to be about two-thirds output. Consider the U.S. values\footnote{Values come from the \textcite{USTreasury2025Interest}} in 2025:  an inflation target of 2\%, net debt of 0.966 of output, and an interest rate on the debt of 3.3\%, which implies a real rate of 1.27\%. If partial monetary finance is used to reduce the net debt from 0.966 to 0.666 of output, the fraction purchased is $\Omega=0.31$. The savings on the interest on debt, and hence the increase in the steady state deficit that could be sustained for the U.S., is 0.32\% of output.
+
+For the case of Japan, though the gross debt ratio is over 250\% of GDP, their net debt was 94.3\% in 2023, similar to the U.S., see \textcite{chien2023japan}. More importantly, the real rate on the debt was negative so there is no incentive for further monetary finance.
+
+\subsection{Extensions}
+
+The DSGE model described here could provide the basis for empirical analysis of countries that engage in monetary finance, such as Japan and Argentina. Explaining the divergent outcomes in those countries is an important goal.
+
+Reconciling the short run and long run impacts of policy for the present model is an important goal. For example, a permanent tax cut would increase the deficit putting upward pressure on inflation. The interest rate rule indicates that the monetary authority must raise rates to fight inflation while lowering the steady state rate on reserves to compensate for the cost to the government of the higher deficits. The proper path of the policy rate over the transition that accounts for both considerations is a non-trivial issue.
+
+Another question the present work raises but cannot answer is the the optimal choice of $\alpha_{i}$. The model suggests that lower values reduce the cost of interest on reserves, allowing for higher deficits, and nothing rules out negative values of $\alpha_{i}$. In practice, the zero lower bound rules them out, and the results above indicate stability would be a problem when $r^{n}_{t}=0$. Hence, the inflation target and the steady state interest on reserve $r^{n}$ are assumed to be positive, so the value of $\alpha_{i}$ must be positive as well. A lower value reduces the cost of interest on reserves, but means the zero lower bound is more likely to bind. 
+
+The values $(g-\tau, \alpha_{i}, \Omega, b_{0}^{T},\Pi)$ are all interdependent policy choices. The ultimate goal is to develop an empirically robust model that reflects the welfare implications of these choices and compute the optimum values given the budget constraint (\ref{cons bc real ss fig}).
+
+\section{Conclusion}
+
+Partial monetary finance and stabilization policy conducted through the interest rate on bank reserves is a policy combination used in Japan 2012-2020 that deserves attention. Full monetization of government debt is not recommended, since the bond market has an important role in the financial system. However, for countries with debt in excess of that needed for financial markets, partial monetary finance could alleviate some of the cost of the interest on the debt. Monetary finance could interfere with open market operations but not monetary policy conducted through the interest rate on bank reserves, which is current practice in many countries.
+
+The steady state budget constraint shows that monetary seigniorage must cover the costs from the interest on the debt, the fiscal deficits and the interest on reserves. There is an inverse relationship between the fraction of bonds purchased by the monetary authority and the steady state inflation rate, which demonstrates the benefit of monetary finance and the unpleasant monetarist arithmetic. Alternatively, for a given inflation target, there is a policy trade-off between the fiscal deficit and the steady state interest rate on reserves. Estimation verifies these intuitions, and show that U.S. policy can be described by monetary dominance for the era where monetary policy targets the interest rate on reserves.
+
+The steady state results emphasize the importance of credibility. They do not justify the monetary finance episodes that led to accelerating inflation in countries such as Argentina. In those cases, bond purchases by the monetary authorities increased with fiscal deficits and interest on the debt, so there were no meaningful steady state values for those costs. In contrast, the trust in Japanese institutions has allowed them to use monetary finance as a tool for stability and to contain the impact of sovereign debt. For countries without such trust, the partial monetary finance policy described here may require an independent fiscal authority with the power to control deficits.
+
+\printbibliography
+
+\clearpage
+%===========================================================
+\appendix
+\section{Determincay and Expectational Stability} \label{app: exp stability}
+%===========================================================
+
+Determinacy conditions are given by \textcite{blanchard1980solution}.
+
+ Expectational stability governs the stability of models for a wide range of non-rational methods of forming expectations. The log-linearized model has the form
+\begin{equation}
+    x_{t} = A_{0} + A_{1}E_{t-1}x_{t+1} + A_{2}x_{t-1},
+    \label{model}
+\end{equation}
+where the vector $x_{t}$ contains the log-linearized variables from $X_{t}$, including the shock $a_{t}$ from (\ref{a}).
+The minimum state variables rational expectations solution has the form
+\begin{equation}
+    x_{t}=B_{0}+B_{1}x_{t-1}.
+    \label{sol}
+\end{equation}
+The results in \textcite{evans2001learning} (Chapter 10) determine the expectational stability of the model (\ref{model}). Define the matrices $DT_{a}$ and $DT_{b}$ as follows.
+\begin{eqnarray}
+     & DT_{a}=(I-A_{1}B_{1})^{-1}A_{1} \\
+     & DT_{b}=[(I-A_{1}B_{1})^{-1}A_{2}]\otimes[(I-A_{1}B_{1})^{-1}A_{1}]
+\end{eqnarray}
+
+\begin{proposition}
+  [\textcite{evans2001learning}, Proposition 10.3] Let the value $\Lambda$ be maximum of the real parts of the eigenvalues of $DT_{a}$ and $DT_{b}$. The model (\ref{model}) with minimum state variables, rational expectations solution (\ref{sol}) is expectationally stable if $\Lambda<1$. It is not expectationally stable  if $\Lambda>1$.  
+\end{proposition}
+
+\clearpage
+\section{Empirical Specification} \label{app: calib}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+Symbol & Affects (equation) & Law of motion & Persistence \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Structural shocks}} \\
+$\varepsilon_{a,t}$   & Preference wedge $a_t$ (\ref{U})        & $a_t=a_{t-1}^{\rho_a}\exp(\varepsilon_{a,t})$ & $\rho_a=0.95$ \\
+$\varepsilon_{z,t}$   & Productivity $z_t$ (\ref{prod})         & $z_t=z_{t-1}^{\rho_z}z^{1-\rho_z}\exp(\varepsilon_{z,t})$ & $\rho_z$ estimated \\
+$\varepsilon_{va,t}$  & Shopping-time pref.\ $v_{a,t}$ (\ref{hs}) & $v_{a,t}=v_{a,t-1}^{\rho_{va}}v_a^{1-\rho_{va}}\exp(\varepsilon_{va,t})$ & $\rho_{va}=0$ \\
+$\varepsilon_{xa,t}$  & Deposit technology $x_{a,t}$ (\ref{d})   & $x_{a,t}=x_{a,t-1}^{\rho_{xa}}x_a^{1-\rho_{xa}}\exp(\varepsilon_{xa,t})$ & $\rho_{xa}=0.95$ \\
+$\varepsilon_{g,t}$   & Govt.\ spending $g_t$ (\ref{g}) & $g_t=\rho_g g_{t-1}+(1-\rho_g)g+\varepsilon_{g,t}$ & $\rho_g=0$ \\
+$\varepsilon^r_t$     & MP shock $z^r_t$ (\ref{rn ZLB})         & $z^r_t=b_r z^r_{t-1}+\varepsilon^r_t$ & $b_r$ estimated \\
+$\varepsilon^\tau_t$  & Tax rule (\ref{tau})                     & iid & -- \\
+$\varepsilon^L_t$     & Labor-leisure FOC (\ref{HH opt labor})     & iid & -- \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Measurement-error shocks (one per observable, all iid)}} \\
+$\varepsilon^{me}_{y,t}$    & $y^{obs}_t$ (output)              & -- & -- \\
+$\varepsilon^{me}_{d,t}$    & $d^{obs}_t$ (deposits)            & -- & -- \\
+$\varepsilon^{me}_{\pi,t}$  & $\pi^{obs}_t$ (inflation)         & -- & -- \\
+$\varepsilon^{me}_{r,t}$    & $r^{obs}_t$ (loan rate)           & -- & -- \\
+$\varepsilon^{me}_{r^n,t}$  & $r^{n,obs}_t$ (policy rate)       & -- & -- \\
+$\varepsilon^{me}_{\tau,t}$ & $\tau^{obs}_t$ (tax rate)         & -- & -- \\
+$\varepsilon^{me}_{bT,t}$   & $bT^{obs}_t$ (debt/GDP)           & -- & -- \\
+\bottomrule
+\end{tabular}
+\caption{The 15 stochastic elements of the estimated model.}
+\label{tab:shocks}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{0.88}
+\begin{tabular}{lll}
+\toprule
+Symbol & Description & Value \\
+\midrule
+\multicolumn{3}{l}{\textit{Household / preferences}} \\
+$\beta$      & Discount factor                         & 0.9967 \\
+$\chi$       & Shopping-time curvature                 & 0.5 \\
+$\psi$       & Inverse Frisch elasticity                & 1.3 \\
+$z$          & Long-run labor productivity              & 1.3 \\
+\midrule
+\multicolumn{3}{l}{\textit{Banking sector}} \\
+$\nu$        & Deposit CES elasticity                   & 0.25 \\
+$x_n$        & Loan portfolio share                     & 0.95 \\
+$x_h=1-x_n$  & Deposit-labor portfolio share             & 0.05 \\
+$\phi_n$     & Reserve management cost                  & 0.0005 \\
+$x_a$        & Deposit-technology level (steady state)  & 5.2528 \\
+\midrule
+\multicolumn{3}{l}{\textit{Price setting}} \\
+$\theta$     & Goods demand elasticity                  & 6.0 \\
+$\phi_p$     & Rotemberg price-adjustment cost           & 50 \\
+\midrule
+\multicolumn{3}{l}{\textit{Fiscal / debt}} \\
+$g$          & Steady-state govt.\ spending (share of output) & 0.20 \\
+$\bar\tau$   & Steady-state tax (share of output)                 & 0.14\\
+$b_0$        & Steady-state debt (share of output)                & 1.0 \\
+$\Omega$     & Fraction of bonds held by the central bank & 0.0 \\
+\midrule
+\multicolumn{3}{l}{\textit{Nominal anchors}} \\
+$\pi^{ss}$   & Reference gross quarterly inflation (2\% annual) & 1.004963 \\
+$r$ & Reference gross quarterly loan rate (Fisher: $\pi^{ss}/\beta$) & 1.008290 \\
+$\underline{r}^{\,n}$ & ZLB floor (gross quarterly rate) & 1.0 \\
+\midrule
+\multicolumn{3}{l}{\textit{Shock persistence (fixed, not estimated)}} \\
+$\rho_a$     & TFP persistence                          & 0.95 \\
+$\rho_{xa}$  & Deposit-technology persistence            & 0.95 \\
+$\rho_{va}$  & Preference-shock persistence              & 0.0 \\
+$\rho_g$     & Govt.\ spending persistence                & 0.0 \\
+$\rho_\tau$  & Tax-rule persistence                     & 0.5 \\
+\bottomrule
+\end{tabular}
+\caption{Calibrated (non-estimated) parameters}
+\label{tab:calib}
+\end{table}
+
+\renewcommand{\arraystretch}{1.0}
+
+\clearpage
+\section{Estimates}  \label{app: est}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrl}
+\toprule
+Parameter & Prior mean & Post.\ mean & 90\% HPD & Prior \\
+\midrule
+
+$b_\pi$ (inflation response)    & 1.000 & 3.474 & [3.344, 3.604] & Gamma(1.00, 1.00) \\
+$b_y$ (output response)         & 1.000 & 0.083 & [0.057, 0.106] & Gamma(1.00, 0.70) \\
+$a_i$ (policy-rate level weight)& 0.490 & 0.181 & [0.169, 0.195] & Beta(0.49, 0.10) \\
+$b_r$ (MP shock persistence)    & 0.360 & 0.262 & [0.171, 0.347] & Beta(0.36, 0.10) \\
+$\phi_b$ (fiscal feedback)   & 0.050 & 0.069 & [0.030, 0.101] & Beta(0.05, 0.05) \\
+$v^a$ (preference scale)        & 2.500 & 2.890 & [2.055, 3.482] & Gamma(2.50, 0.75) \\
+$\eta$ (labor preference)       & 1.530 & 1.136 & [0.922, 1.326] & Gamma(1.53, 0.40) \\
+$\rho_z$ (productivity persist.)& 0.450 & 0.443 & [0.292, 0.549] & Beta(0.45, 0.10) \\
+
+\midrule
+\multicolumn{5}{l}{\textit{Standard deviation of shocks}} \\
+$\sigma_a$   & 0.050 & 0.017 & [0.016, 0.018] & InvGamma(0.05, 0.025) \\
+$\sigma_z$   & 0.050 & 0.023 & [0.018, 0.028] & InvGamma(0.05, 0.025) \\
+$\sigma_{va}$& 0.050 & 0.039 & [0.026, 0.050] & InvGamma(0.05, 0.025) \\
+$\sigma_{xa}$& 0.050 & 0.036 & [0.032, 0.041] & InvGamma(0.05, 0.025) \\
+$\sigma_g$   & 0.050 & 0.030 & [0.025, 0.036] & InvGamma(0.05, 0.025) \\
+$\sigma_r$   & 0.050 & 0.024 & [0.021, 0.026] & InvGamma(0.05, 0.025) \\
+$\sigma_\tau$& 0.050 & 0.031 & [0.024, 0.036] & InvGamma(0.05, 0.025) \\
+$\sigma_L$ & 0.150 & 0.069 & [0.062, 0.076] & InvGamma(0.15, 0.075) \\
+$\sigma_{me,y}$   & 0.050 & 0.021 & [0.018, 0.023] & InvGamma(0.05, 0.025) \\
+$\sigma_{me,d}$   & 0.050 & 0.018 & [0.015, 0.022] & InvGamma(0.05, 0.025) \\
+$\sigma_{me,\pi}$ & 0.050 & 0.014 & [0.013, 0.014] & InvGamma(0.05, 0.025) \\
+$\sigma_{me,r}$   & 0.050 & 0.010 & [0.009, 0.012] & InvGamma(0.05, 0.025) \\
+$\sigma_{me,r^n}$ & 0.010 & 0.003 & [0.002, 0.003] & InvGamma(0.01, 0.005) \\
+$\sigma_{me,\tau}$& 0.050 & 0.020 & [0.017, 0.024] & InvGamma(0.05, 0.025) \\
+$\sigma_{me,bT}$  & 0.050 & 0.022 & [0.019, 0.025] & InvGamma(0.05, 0.025) \\
+\bottomrule
+\end{tabular}
+\caption{Posterior estimates, current (diffuse-prior) round: 2 chains
+$\times$ 50{,}000 draws, \texttt{mh\_jscale=0.05}, \texttt{hessian}
+jumping covariance, true OccBin ZLB likelihood, reserve-equation fix
+(Section~1), \texttt{FYGFDPUN}-based debt observable, $\bar\tau=0.14$,
+$\chi=0.5$. $\rho_a,\rho_{xa}$ remain fixed at 0.95 (see Section 2.2).}
+\label{tab:posteriors}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+Symbol & Description & Gross quarterly & Annualized (\%) \\
+\midrule
+$\pi$   & Inflation                     & 1.008964 & 3.63  \\
+$r$& Loan rate                     & 1.012304 & 5.01  \\
+$r^d$   & Deposit rate                  & 1.004333 & 1.74  \\
+$r^n$   & Policy rate (interest on reserves) & 1.002214 & 0.89  \\
+\bottomrule
+\end{tabular}
+\caption{Steady-state gross quarterly rates and simple annualized
+percentages ($(\text{rate}^4-1)\times 100$) at the posterior means for the regime away from the ZLB}
+\label{tab:ss}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.65\textwidth]{det_estab_map_mmt8bOccBin3_covid_bT_baa.pdf}
+\caption{Combined determinacy/E-stability region over
+$(b_\pi,b_y)\in[0,5]\times[0,3]$, all other parameters at posterior
+means. The star marks the posterior mean
+$(b_\pi,b_y)=(3.474,0.083)$.}
+\label{fig:detestab}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lccccc}
+\toprule
+Parameter & Chain 1 $p$ & Converged? & Chain 2 $p$ & Converged? \\
+\midrule
+$v^a$        & 0.350 & Yes & 0.558 & Yes \\
+$\eta$       & 0.088 & Yes & 0.008 & No  \\
+$b_\pi$      & 0.062 & Yes & 0.089 & Yes \\
+$b_y$        & 0.281 & Yes & 0.070 & Yes \\
+$a_i$        & 0.024 & No  & 0.563 & Yes \\
+$b_r$        & 0.001 & No  & 0.001 & No  \\
+$\rho_z$     & 0.564 & Yes & 0.000 & No  \\
+$\phi_b$  & 0.226 & Yes & 0.081 & Yes \\
+\bottomrule
+\end{tabular}
+\caption{Geweke convergence test $p$-values for each parameter two chaing with a 15\% taper}
+\label{tab:geweke}
+\end{table}
+
+
+\end{document}

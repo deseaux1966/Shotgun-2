@@ -1,0 +1,465 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{geometry}
+\geometry{margin=1.1in}
+
+\title{From the Calibrated Model to the Estimated Model:\\
+Modifications Required Beyond Subsection 4.2}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note catalogs every modification made to the theoretical model in
+\texttt{ShotgunPCestCovid.tex} -- as fully specified through Section~1
+(Introduction), Section~2 (Budget Constraints), Section~3 (The Model),
+and Subsections~4.1--4.2 (Model Summary and Calibration) -- in order to
+arrive at the model actually taken to the data,
+\texttt{mmt8bOccBin3\_covid\_bT\_baa.mod}, and its Bayesian estimation
+results (current round: reserve-equation fix, diffuse $b_\pi,b_y$
+priors, \texttt{hessian} jumping covariance, $\bar\tau=0.14$, $\chi=0.5$;
+see \texttt{mmt8bOccBin3\_covid\_bT\_baa\_epsL\_summary.tex} for the full
+methodology and results, including the superseded tight-prior ``gen1''
+round retained there for comparison). It is intended as a working
+reference for rewriting the paper's Subsection~4.3 onward, which
+currently continues with the calibrated-model determinacy analysis and
+an older, no-longer-accurate Section~5 estimation draft (the latter
+lacks the debt-to-GDP observable, the Baa-based loan rate, the COVID
+labor-supply shock, a genuine OccBin ZLB likelihood, and uses a
+different fiscal calibration than the results actually obtained). No
+existing files are modified by this note; it is a planning document only.
+\end{abstract}
+
+\tableofcontents
+
+\section{Scope and a frequency caveat}
+
+Sections~1--3 and Subsections~4.1--4.2 present the model at a
+calibration that does not specify an explicit sampling frequency, with
+illustrative annual-scale targets ($\Pi=1.04$, $r=1.07$, $\beta=0.972$,
+etc.). The estimated model is explicitly \emph{quarterly}, disciplined
+by a 2009Q1--2025Q4 U.S.\ sample, and every rate-like calibrated value
+is recalibrated accordingly -- the same symbol (e.g.\ $\beta$) refers to
+a materially different numerical target between the two. This is not
+itemized separately below except where the reinterpretation also
+changes the model's economic content (e.g.\ the ZLB), but should be
+kept in mind throughout: a side-by-side value comparison for shared
+symbols is only meaningful once both are understood as quarterly.
+
+\section{Structural equation modifications}
+
+\subsection{Interest rate rule: output response, steady-state rate base, shock, and ZLB}
+Paper (eq.~\ref{ior}-equivalent, Section~2):
+\[
+r^{n}_{t}=r_{t}^{\alpha_{i}}\left(\frac{\Pi_{t}}{\Pi}\right)^{b_{\pi}}.
+\]
+Estimated model:
+\[
+r^{n}_{t}=\max\!\left[1,\;\big(r^{\ell,ss}\big)^{a_i}\left(\frac{\pi_t}{\pi^{ss}}\right)^{b_\pi}\left(\frac{y_t}{y^{ss}}\right)^{b_y}\exp(z^r_t)\right],
+\qquad z^r_t = b_r\,z^r_{t-1}+\varepsilon^r_t.
+\]
+Three changes: (i) an output-response term $(y_t/y^{ss})^{b_y}$ is added
+(no output term exists in the paper's rule at all); (ii) the base rate
+is the \emph{fixed calibrated steady-state} loan rate $r^{\ell,ss}$
+rather than the time-varying market rate $r_t$ (the paper's $r_t$ and
+loan rate $r^\ell_t$ coincide via the arbitrage condition
+$r^\ell_t=r_t$, but the estimated rule uses the calibrated anchor, not
+the contemporaneous value); (iii) a persistent monetary-policy shock
+$z^r_t$ is added, entirely absent from the paper. Most substantively,
+(iv) a strict zero lower bound is imposed via a $\max[1,\cdot]$
+operator, solved with Dynare's OccBin piecewise-linear toolkit
+(Guerrieri and Iacoviello, 2015) -- the paper's calibrated model has no
+lower bound on $r^n_t$ at all. Enforcing the ZLB genuinely (rather than
+carrying the constraint syntactically but disabling it in estimation,
+as an earlier draft of this file did) requires OccBin's true
+piecewise-linear likelihood, which is itself nonsmooth and required a
+two-stage mode-finding procedure (Section~6 below).
+
+\subsection{Tax rule: lagged debt, persistence, shock}
+\label{sec:taxrule}
+Paper (eq.~\ref{tau}):
+\[
+\tau_t = \bar\tau\left(\frac{b_t}{(1-\Omega)b_0^T}\right)^{\varphi_b}.
+\]
+Estimated model:
+\[
+\tau_t = \tau_{t-1}^{\rho_\tau}\,\bar\tau^{\,1-\rho_\tau}\left(\frac{b_{t-1}}{(1-\omega)b_0}\right)^{\varphi_b}\exp(\varepsilon^\tau_t).
+\]
+Three changes: the debt ratio is \emph{lagged} ($b_{t-1}$, not $b_t$)
+-- required so that $b_t$ is a predetermined state variable, which
+matters for Blanchard-Kahn compatibility once $b_t$ is genuinely
+endogenous (see Section~2.3); an AR(1)-type persistence term
+$\tau_{t-1}^{\rho_\tau}$ is added (the paper's rule is a purely static
+function of the debt ratio); and a stochastic innovation
+$\varepsilon^\tau_t$ is added (the paper's rule is deterministic).
+
+\subsection{Debt-issuance equation: linearization and simplification}
+\label{sec:debtissuance}
+The paper actually contains \emph{two} separate real budget-constraint
+identities (Section~3, ``Equilibrium Household Budget Constraints''),
+not one: eq.~(\ref{HH BC m}), which solves for currency,
+$m_t = g_t - \tau_t + r^n_t n_t$, and eq.~(\ref{HH BC n}), which solves
+for reserves, $n_t = m_{t-1}/\Pi_t + b_{t-1}/\Pi_t - b_t/r_t$ -- the
+latter is the one \emph{including} the reserve stock $n_t$ and the
+interest-on-reserves rate $r^n_t$ (via $m_t$'s own definition) explicitly,
+and is discussed separately in Subsection~\ref{sec:reserve} below,
+since the estimated model modifies it too, in the opposite direction
+(restoring rather than dropping terms). The two identities combine into
+one consolidated government budget constraint. The Policy subsection
+then writes a \emph{third}, separate equation -- eq.~(\ref{b issue})
+below -- that rearranges this same consolidated identity to solve
+directly for $b_t$ instead of $n_t$; being a rearrangement of the same
+underlying identity, it too contains $m_{t-1}$ and $n_t/r^n_t$ terms.
+This subsection concerns only that third equation, the one solving for
+$b_t$.
+
+Paper (eq.~\ref{b issue}):
+\[
+b_t = r_t\left[b_{t-1}\Pi_t^{-1} + g - \tau_t - m_{t-1}(1-\Pi_t) + (r^n_t-1)n_t\right].
+\]
+Estimated model:
+\[
+b_t = \frac{r^{\ell,ss}}{\pi^{ss}}b_{t-1} + g_t - \tau_t + b_0\left(1-\frac{r^{\ell,ss}}{\pi^{ss}}\right) - (g-\bar\tau).
+\]
+This is the single largest structural departure from the paper. The
+time-varying ratio $r_t/\Pi_t$ multiplying $b_{t-1}$ is replaced by a
+\emph{fixed} calibrated ratio $r^{\ell,ss}/\pi^{ss}$ (an extension of
+Assumption~2's fixed-real-rate logic to the dynamic debt equation); the
+currency-growth term $-m_{t-1}(1-\Pi_t)$ and the reserve-interest term
+$(r^n_t-1)n_t$ are dropped entirely; and government spending becomes
+the stochastic $g_t$ rather than the fixed $g$. This backward-looking
+approximation decouples $b_t$ from the model's forward-looking
+variables ($\pi_t$, $r^\ell_t$) and is what makes a genuinely
+endogenous, estimable debt stock compatible with the Blanchard-Kahn
+order/rank conditions -- the full nonlinear equation (\ref{b issue})
+introduces exactly the kind of forward-looking-variable coupling that a
+naive endogenous-debt extension of this model class runs into. Contrast
+this with the $n_t$ equation (Subsection~\ref{sec:reserve}): there, the
+analogous $m_{t-1}$ and $b_{t-1}/b_t$ terms are \emph{not} dropped, only
+the fixed-ratio linearization is applied where needed -- the difference
+is that $b_t$'s forward-looking coupling comes from $r_t/\Pi_t$
+\emph{multiplying the whole bracket} (including $g_t,\tau_t$), which
+this equation's own recursive structure cannot avoid, whereas $n_t$'s
+equation only ever multiplies $b_{t-1}$ and $b_t$ by already-fixed
+rates, so no comparable simplification is forced on it.
+
+\subsection{Euler equation: marginal-utility reformulation (solution technique, not economics)}
+Paper (eq.~\ref{Euler}):
+\[
+\beta E_t\!\left(\frac{r_{t+1}}{\Pi_{t+1}}\left(\frac{h_{t+1}}{h_t}\right)^\psi\frac{w_t}{w_{t+1}}\frac{A_{t+1}}{A_t}\right)=1.
+\]
+Estimated model introduces $\mu_t \equiv A_t w_t h_t^\psi$ and rewrites:
+\[
+\mu_t = A_t w_t h_t^{\psi}, \qquad
+\beta\,\frac{r^\ell_{t+1}}{\pi_{t+1}}\,\frac{\mu_{t+1}}{\mu_t}=1.
+\]
+Algebraically equivalent to the paper's Euler equation, not a
+behavioral change. The reformulation reduces the count of
+forward-looking variables in the linearized system (from what the
+paper's direct specification would imply down to four: $\pi$, $r^\ell$,
+$\mu$, $y$), which is what makes the model numerically tractable for
+Blanchard-Kahn/E-stability analysis with an endogenous bond stock.
+
+\subsection{Labor-leisure condition: productivity in place of the wage, plus the COVID shock}
+Paper (Section~4.1, combining eqs.~\ref{foc c} and \ref{foc h}):
+\[
+\chi h^s_t + \frac{c_t}{w_t}h_t^\psi = \eta^{-1}.
+\]
+Estimated model:
+\[
+\chi\, hs_t + \frac{c_t}{z}h_t^{\psi} = \frac{1}{\eta}\exp(\varepsilon^L_t).
+\]
+Two changes: the denominator switches from the (endogenous) real wage
+$w_t$ to the fixed productivity parameter $z$; and a new iid shock
+$\varepsilon^L_t\sim N(0,\sigma_L^2)$ multiplies the right-hand side. A
+negative realization of $\varepsilon^L_t$ shrinks the right-hand side,
+forcing lower labor supply for given consumption -- a negative
+labor-supply shock, included as a simple stand-in for the COVID-19
+labor-supply collapse. (A deterministic one-period dummy,
+\texttt{varexo\_det}, was considered first to target a specific
+calendar quarter, but Dynare 7.1's estimation routine does not read
+\texttt{varexo\_det} series from the data file, so it would be silently
+ignored by the Kalman filter; the iid shock avoids this.) This shock
+has no counterpart anywhere in the paper.
+
+\subsection{New variable: debt-to-GDP link}
+Not present in the paper at all. A purely definitional auxiliary
+variable is added to connect the model's debt-to-output state $b_t$ to
+an observable debt-to-GDP ratio:
+\[
+bT_t = \frac{b_t}{1+g}.
+\]
+
+\subsection{Reserve equation: restored debt-state coupling (update)}
+\label{sec:reserve}
+Unlike every other modification catalogued here, this one \emph{reduces}
+the gap to the paper rather than adding to it. The estimated model's
+equation for reserves $n_t$ -- the analog of the paper's
+eq.~(\ref{HH BC n}), $n_t = m_{t-1}/\Pi_t + b_{t-1}/\Pi_t - b_t/r_t$ --
+had been implemented as
+\[
+n_t = \frac{m_{t-1}}{\pi_t} + b_0(1-\omega)\left(\frac{1}{\pi_t}-\frac{1}{r^\ell_t}\right),
+\]
+using the fixed steady-state debt target $b_0(1-\omega)$ in place of the
+actual debt state, so $n_t$ never responded to fluctuations in
+outstanding debt at all. This is now corrected to
+\[
+n_t = \frac{m_{t-1}}{\pi_t} + \frac{b_{t-1}}{\pi_t} - \frac{b_t}{r^\ell_t},
+\]
+the model's direct, literal analog of eq.~(\ref{HH BC n}), with no
+further simplification needed: $b_t$'s own law of motion (the fixed-ratio
+linearization in Subsection~\ref{sec:debtissuance}) never depends on any forward-looking
+variable, so it remains safe to use here in place of the fixed
+placeholder without reopening the Blanchard-Kahn problem that motivated
+that linearization in the first place. Verified directly: the steady
+state and the Blanchard-Kahn eigenvalue count (4 forward-looking
+variables) are unchanged before and after this fix.
+
+\section{New stochastic structure}
+
+\textbf{Update: the paper's Section~3 now already includes most of
+this.} At the time this catalog was first written, the paper's
+calibrated model (Sections~1--3, 4.1--4.2) had exactly \emph{one}
+stochastic shock, the preference shock $a_t$ in the utility function.
+The paper's Section~3 has since been edited (by instruction, separately
+from the estimated-model changes tracked elsewhere in this note) so
+that four more of these processes -- $z_t$, $v_{a,t}$, $x_{a,t}$, and
+$g_t$ -- are now introduced directly in the paper itself, each at the
+point where the corresponding parameter first appears (productivity
+$z_t$ in the Firm decision subsection, eq.~\ref{z}; shopping-time
+preference $v_{a,t}$ in the Household Problem subsection, eq.~\ref{va};
+deposit technology $x_{a,t}$ in the Banking Sector subsection,
+eq.~\ref{xa}; government spending $g_t$ in the Policy subsection,
+eq.~\ref{g}), using the identical AR(1) functional forms as the
+estimated model. \emph{Only the three rows marked ``still new'' below
+remain absent from the paper}: the monetary-policy shock $z^r_t$ (which
+would belong in Section~2's interest-rate rule, eq.~\ref{ior}, not
+Section~3, and was not touched); the tax-rule shock
+$\varepsilon^\tau_t$ (which requires the tax rule's lag/persistence
+restructuring described in Subsection~\ref{sec:taxrule}, not made to
+the paper's eq.~\ref{tau}); and the COVID labor-supply shock
+$\varepsilon^L_t$ (which has no natural home in the paper's derivation,
+since it is not tied to any single fixed parameter the way the other
+four are).
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Process & Law of motion & Status relative to the paper \\
+\midrule
+$a_t$ (preference)     & $a_t=a_{t-1}^{\rho_a}\exp(\varepsilon_{a,t})$ & Same functional form; original shock in the paper \\
+$z_t$ (productivity)   & $z_t=z_{t-1}^{\rho_z}z^{1-\rho_z}\exp(\varepsilon_{z,t})$ & \textbf{Now in the paper} (eq.~\ref{z}) \\
+$v_{a,t}$ (shopping-time pref.) & $v_{a,t}=v_{a,t-1}^{\rho_{va}}v_a^{1-\rho_{va}}\exp(\varepsilon_{va,t})$ & \textbf{Now in the paper} (eq.~\ref{va}) \\
+$x_{a,t}$ (deposit tech.) & $x_{a,t}=x_{a,t-1}^{\rho_{xa}}x_a^{1-\rho_{xa}}\exp(\varepsilon_{xa,t})$ & \textbf{Now in the paper} (eq.~\ref{xa}) \\
+$g_t$ (govt.\ spending) & $g_t=\rho_g g_{t-1}+(1-\rho_g)g+\varepsilon_{g,t}$ & \textbf{Now in the paper} (eq.~\ref{g}) \\
+$z^r_t$ (MP shock)      & $z^r_t=b_r z^r_{t-1}+\varepsilon^r_t$ & Still new: no shock in the paper's rule (\ref{ior}) \\
+$\varepsilon^\tau_t$ (tax shock) & iid, enters tax rule directly & Still new: rule (\ref{tau}) is deterministic \\
+$\varepsilon^L_t$ (COVID labor supply) & iid, enters labor-leisure FOC & Still new: no counterpart in the paper \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Six measurement-error shocks (one per non-debt observable) and a
+seventh for $bT^{obs}$ are added on top of these -- see Section~4. These
+remain entirely absent from the paper, which defines no observable
+equations at all (Section~4 below).
+
+\section{Observable/measurement block (entirely new)}
+
+The paper's Sections~1--4.2 define no mapping from model variables to
+data at all. The estimated model adds seven measurement equations, each
+a log-deviation from steady state plus measurement error:
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Observable & FRED series & Transformation \\
+\midrule
+$y^{obs}$ & \texttt{GDPC1} / \texttt{OPHNFB} & $\log(\text{GDPC1}/\text{OPHNFB})$, demeaned \\
+$d^{obs}$ & \texttt{DPSACBW027SBOG} / \texttt{OPHNFB} & $\log(\text{Deposits}/\text{OPHNFB})$, demeaned \\
+$\pi^{obs}$ & \texttt{GDPDEF} & $\log(\text{GDPDEF}_t/\text{GDPDEF}_{t-1})$, demeaned \\
+$r^{obs}$ & \texttt{BAA} & $\log(1+\text{BAA}_q/400)$, demeaned \\
+$r^{n,obs}$ & \texttt{FEDFUNDS} & $\log((1+\text{FEDFUNDS}/100)^{0.25})$, demeaned \\
+$\tau^{obs}$ & \texttt{FGRECPT} / \texttt{GDP} & $\log(\text{Tax receipts}/\text{Nominal GDP})$, demeaned \\
+$bT^{obs}$ & \texttt{FYGFDPUN} / \texttt{GDP} & $\log((\text{FYGFDPUN}/1000)/\text{GDP})$, demeaned \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two choices are worth flagging as deliberate departures from the most
+obvious extension of the model: the loan-rate observable uses Moody's
+Baa corporate bond yield rather than the bank prime rate, because Baa
+carries genuine credit-spread variation instead of being mechanically
+pinned to the federal funds rate plus a fixed spread; and the debt
+observable uses federal debt \emph{held by the public}
+(\texttt{FYGFDPUN}), not gross/total public debt (\texttt{GFDEBTN}),
+divided by nominal GDP (\texttt{GDP}). (An earlier attempt used
+\texttt{NGDPDQ} as the GDP denominator; that series does not exist on
+FRED at all, and demeaned the debt ratio in levels rather than logs,
+inconsistent with the measurement equation above -- both fixed in the
+current build.) A currency-in-circulation observable, present in some
+earlier drafts of this estimation, is excluded; the model is estimated
+on seven observables, not eight.
+
+\section{Calibration changes}
+
+Table~\ref{tab:calibcompare} compares every parameter given a numerical
+value in Subsection~4.2 against its estimated-model counterpart.
+Frequency matters here (Section~1): the paper's values are not
+quarterly.
+
+\begin{center}
+\begin{tabular}{@{}lccl@{}}
+\toprule
+Symbol & Paper (Sec.\ 4.2) & Estimated model & Status \\
+\midrule
+$\chi$        & 1.0    & 0.5 (recalibrated) & Calibrated in both; value changed \\
+$\psi$        & 1.3    & 1.3    & Unchanged \\
+$\nu$         & 0.25   & 0.25   & Unchanged \\
+$\phi_n$      & 0.0005 & 0.0005 & Unchanged \\
+$\phi_p$      & 50     & 50     & Unchanged \\
+$\Omega$      & 0.0    & 0.0    & Unchanged \\
+$x_n$         & 0.95   & 0.95   & Unchanged \\
+$\theta$      & --     & 6.0    & New (goods demand elasticity; not calibrated in Sec.\ 4.2 text) \\
+$\beta$       & 0.972  & 0.9967 & Recalibrated for quarterly frequency and the ZLB \\
+$v_a$         & 1.138  & 2.5035 (initial) & \textbf{Now estimated}, not calibrated \\
+$\eta$        & 1.674  & 1.5294 (initial) & \textbf{Now estimated}, not calibrated \\
+$x_a$         & 3.541  & 5.2528 & Still calibrated (only its shock s.d.\ is estimated) \\
+$\rho_a$      & 0.9    & 0.95   & Recalibrated; fixed in both (see Section~7 caveat) \\
+$g$           & 0.2    & 0.2    & Unchanged \\
+$\bar\tau$ (paper: $\tau$) & 0.18 & 0.14 (recalibrated) & Deficit target changed from 2\% to 6\% of GDP \\
+$\alpha_i$ (paper), $a_i$ (est.) & $\approx$0.3 (Table~\ref{tab:inf}) & 0.181 (post.; prior mean 0.49) & \textbf{Now estimated}, not calibrated \\
+$b_\pi$       & (varied in analysis, no fixed value) & 3.47 (post.; prior mean 1.00) & \textbf{Now estimated}, not calibrated; diffuse prior (see Section~6) \\
+$\varphi_b$   & (varied in analysis, threshold $<$0.153) & 0.069 (post.; prior mean 0.05) & \textbf{Now estimated}, not calibrated \\
+\bottomrule
+\end{tabular}
+\end{center}
+\label{tab:calibcompare}
+
+Parameters with no counterpart in the paper at all, needed only by the
+extensions above: $b_y$ (output-response weight, new), $b_r$
+(monetary-policy-shock persistence, new), $\rho_z,\rho_{xa},\rho_{va},\rho_g,\rho_\tau$
+(persistence of the newly stochastic processes in Section~3, all
+absent as concepts from the paper), $\pi^{ss}$ and $r^{\ell,ss}$ (fixed
+nominal anchors used only in the linearized debt equation and the
+Taylor-rule normalization, Section~2.3), and $\underline{r}^{\,n}=1$
+(the ZLB floor itself).
+
+\section{Parameters moved from calibrated to estimated}
+
+Eight structural parameters are estimated via Bayesian methods rather
+than calibrated: $v_a$, $\eta$, $b_\pi$, $b_y$, $a_i$, $b_r$, $\rho_z$,
+$\varphi_b$. Of these, only $v_a$, $\eta$, and (implicitly, via the
+Section~4.3 stability sweep) $\varphi_b$ appear as fixed numbers
+anywhere in the paper's calibrated model; $b_\pi$, $b_y$, $a_i$, $b_r$,
+and $\rho_z$ either have no fixed calibrated value in the paper (they
+are swept over ranges for the determinacy analysis, or -- $b_y$, $b_r$
+-- do not exist in the paper's model at all).
+
+\textbf{Prior revision (current round).} $b_\pi$ and $b_y$'s priors were
+substantially loosened -- from Normal(2.10, 0.15) and Gamma(0.28, 0.10)
+to Gamma(1.00, 1.00) and Gamma(1.00, 0.70) -- so that the posterior on
+the Taylor-rule inflation-response coefficient is not mechanically
+pulled toward the earlier round's own tight prior; $\varphi_b$'s prior
+mean was also lowered, from 0.10 to 0.05. Priors and current-round
+posterior results:
+
+\begin{center}
+\small
+\begin{tabular}{@{}llrrl@{}}
+\toprule
+Symbol & Prior & Prior mean/std & Post.\ mean (90\% HPD) & \\
+\midrule
+$v_a$ & Gamma & 2.50 / 0.75 & 2.890\ [2.055, 3.482] \\
+$\eta$ & Gamma & 1.53 / 0.40 & 1.136\ [0.922, 1.326] \\
+$b_\pi$ & Gamma & \textbf{1.00 / 1.00} & \textbf{3.474\ [3.344, 3.604]} \\
+$b_y$ & Gamma & \textbf{1.00 / 0.70} & 0.083\ [0.057, 0.106] \\
+$a_i$ & Beta & 0.49 / 0.10 & 0.181\ [0.169, 0.195] \\
+$b_r$ & Beta & 0.36 / 0.10 & 0.262\ [0.171, 0.347] \\
+$\rho_z$ & Beta & 0.45 / 0.10 & 0.443\ [0.292, 0.549] \\
+$\varphi_b$ & Beta & \textbf{0.05} / 0.05 & 0.069\ [0.030, 0.101] \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+With the informative prior removed, $b_\pi$'s posterior does not fall
+toward the diffuse prior's mean of 1 -- it moves to 3.47, \emph{higher}
+than the earlier tight-prior estimate of 2.17. The data want a stronger
+inflation response than the previous prior allowed; the conclusion that
+the Taylor principle holds is a property of the data, not an artifact of
+prior choice. $b_y$'s prior needed reshaping once during this process:
+an initial Gamma(1.00, 1.00) (shape 1, i.e.\ Exponential, whose density
+is maximized at zero) put $b_y$'s posterior mode at exactly 0.0000 with
+a non-positive-definite Hessian there -- a corner solution the prior
+itself pre-loads. Raising the shape via Gamma(1.00, 0.70) (mode near
+0.51, no boundary pre-loading) resolved this without narrowing the
+prior's effective diffuseness. $a_i$ is essentially unchanged from the
+previous round (0.181 vs.\ 0.180) despite its own prior being untouched,
+a useful cross-round consistency check.
+
+$\rho_a$ and $\rho_{xa}$ were also tried as free parameters in an
+earlier attempt; freeing them drove $\rho_a$ to $\approx$0.9992 --
+effectively a unit root -- and produced a non-positive-definite Hessian
+at the posterior mode, so both remain fixed at 0.95 in all reported
+results.
+
+\section{Estimation methodology (absent from Sections 1--4.2 by construction)}
+
+Sections~1--3 and Subsections~4.1--4.2 describe only a calibrated,
+deterministic-steady-state model; nothing about Bayesian inference
+appears until Section~5 (which, as noted in the abstract, is itself
+outdated relative to the results actually obtained). Briefly, for a
+replacement Section~5 to describe accurately:
+
+\begin{itemize}
+\item \textbf{Two-stage mode-finding.} OccBin's piecewise-linear
+likelihood is nonsmooth at ZLB regime switches, so the posterior mode
+is first located on the linear (non-OccBin) approximation
+(\texttt{mode\_compute=4}), then MCMC is restarted at
+\texttt{mode\_compute=0} from that mode with the true OccBin likelihood
+switched on.
+\item \textbf{MCMC jumping covariance.} An initial run using a diagonal
+proposal covariance (\texttt{prior\_variance}) produced chain
+disagreement traceable to that covariance ignoring the $b_\pi$/$b_y$
+correlation. A Hessian-based covariance fixed this under the original
+calibration but showed renewed (milder) disagreement after
+recalibrating $\bar\tau,\chi$; that round's reported (``gen1'') results
+instead used a jumping covariance built from a preliminary round's own
+pooled posterior draws -- standard adaptive-MCMC pilot/tune practice,
+verified against Dynare's source to get a subtle sign/inversion
+convention right (the saved matrix must be a precision, not a
+covariance). The current, diffuse-prior round did not need this extra
+step: a plain Hessian-based covariance (evaluated at the Stage-1 mode)
+was sufficient throughout once the jump scale was tuned down, and
+achieved the best chain-mean agreement of any round for three of the
+four policy parameters.
+\item \textbf{Acceptance-ratio discipline.} Any chain with an
+acceptance ratio below 0.05 is treated as a failed run and re-estimated
+with an adjusted jump scale; short (3,000-draw) diagnostics
+systematically overstated what a full 50,000-draw run would sustain, so
+later rounds built in extra margin before committing to a full run. The
+current round's first production attempt cleared the 0.05 floor
+(5.4\%/5.3\%) but only barely, with weak Geweke convergence -- rather
+than accept a technically-passing but marginal result, it was treated as
+a failure, and a longer (8,000-draw) diagnostic was used before the next
+full run, since the usual 3,000-draw diagnostic had just mispredicted
+that round's production behavior especially badly ($\sim$5$\times$
+degradation, worse than any earlier round).
+\item \textbf{Smoother limitation.} OccBin's nonlinear smoother did not
+reach a fixed point in any round attempted, so no OccBin-consistent
+smoothed shock/state decomposition is available; this does not affect
+the posterior parameter estimates, which are informed by OccBin's
+\emph{filter} (used throughout MCMC) rather than the smoother.
+\end{itemize}
+
+The full tuning history, Geweke convergence diagnostics, determinacy/
+E-stability results at the estimated posterior, and steady-state
+implications are documented in
+\texttt{mmt8bOccBin3\_covid\_bT\_baa\_epsL\_summary.tex} and are not
+reproduced here.
+
+\end{document}
