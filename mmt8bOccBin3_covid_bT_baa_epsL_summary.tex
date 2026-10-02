@@ -1536,7 +1536,9 @@ positive.
 
 Beyond the unconditional posterior described above, two exercises ask a
 conditional-on-the-data question: given the smoothed history implied by
-this model and the posterior mean, which shocks actually account for the
+this model and the posterior mean of the production round with
+$\sigma_{me,r^n}$ fixed at 0.0015 (the round whose regime path recovers the
+true ZLB dates; Section~\ref{sec:zlb-detection}), which shocks actually account for the
 elevated inflation observed over 2021Q2--2023Q2 (the period this note's
 abstract refers to as ``elevated inflation'')? Section~\ref{sec:cf-method}
 describes the shared methodology; Sections~\ref{sec:cf-debt} and
@@ -1550,7 +1552,17 @@ Both exercises use Dynare's \texttt{calib\_smoother} command -- the Kalman
 smoother evaluated once at fixed (posterior-mean) parameters, without any
 further MCMC -- applied to the same estimation dataset
 (\texttt{fred\_data\_debt\_baa.mat}) used throughout this note, followed by
-\texttt{shock\_decomposition}. For a variable $x_t$ observed or implied by
+\texttt{shock\_decomposition}. The parameters are the posterior means of the
+production round with $\sigma_{me,r^n}$ fixed at 0.0015
+($b_\pi=3.355$, $b_y=0.083$, $a_i=0.184$, $b_r=0.252$, $\varphi_b=0.091$).
+The same exercises were also run at the posterior means of the earlier round
+in which $\sigma_{me,r^n}$ was estimated (Table~\ref{tab:posteriors};
+$b_\pi=3.474$). The two rounds give nearly identical results -- the
+2021Q2--2023Q2 average inflation deviations and counterfactuals agree to
+within about 4\%, and the only visible difference is
+the size of the debt counterfactual (about 27 against 32 percentage points of
+GDP) -- so the tables and figures below report the fixed-$\sigma_{me,r^n}$
+round, and Table~\ref{tab:cf-sub} gives the comparison. For a variable $x_t$ observed or implied by
 the model, this yields an exactly additive decomposition of its smoothed
 deviation from steady state,
 \[
@@ -1580,7 +1592,7 @@ binding through 2022Q2 (the observed-rate episode in Section~1 ends
 2021Q4, and the linear notional-rate check 2022Q1), so roughly the first
 five of the window's nine quarters (2021Q2--2022Q2) are at or near the
 floor. In those quarters the linear smoother is infeasible by
-construction -- its policy rate averages 0.9995 (gross quarterly), below
+construction -- its policy rate averages 0.9994 (gross quarterly), below
 the floor of 1 -- and, under a true floor, $\varepsilon^r_t$ is not
 point-identified (any shock pushing the notional rate below 1 is
 consistent with the data), whereas the linear smoother picks the single
@@ -1607,9 +1619,9 @@ evolved without them.
 \toprule
 Window & Variable & Avg.\ actual dev.\ from SS & Avg.\ counterfactual dev.\ from SS \\
 \midrule
-2021Q2--2023Q2 & $\pi_t$ & 0.00302 & 0.00307 \\
-2021Q2--2023Q2 & $bT_t$ & 0.1586 & $-$0.1615 \\
-2020Q1--2020Q4 (COVID) & $\pi_t$ & $-$0.00112 & $-$0.00018 \\
+2021Q2--2023Q2 & $\pi_t$ & 0.00290 & 0.00295 \\
+2021Q2--2023Q2 & $bT_t$ & 0.1585 & $-$0.1110 \\
+2020Q1--2020Q4 (COVID) & $\pi_t$ & $-$0.00112 & $-$0.00017 \\
 \bottomrule
 \end{tabular}
 \caption{Actual vs.\ counterfactual ($\varepsilon^\tau_t,\varepsilon_{g,t}$ shut off) average deviations from steady state. $\pi_t$ in gross quarterly units, $bT_t$ in debt/GDP ratio units.}
@@ -1618,16 +1630,17 @@ Window & Variable & Avg.\ actual dev.\ from SS & Avg.\ counterfactual dev.\ from
 
 The debt panel confirms the experiment is doing what it should: without
 $\varepsilon^\tau_t,\varepsilon_{g,t}$, debt-to-GDP would average roughly
-32 percentage points lower over 2021Q2--2023Q2 (0.64--0.70 rather than the
-actual 1.00--1.03) -- these two shocks are indeed the model's debt-moving
+27 percentage points lower over 2021Q2--2023Q2 (0.71--0.73 rather than the
+actual 0.98--1.01; about 32 points at the posterior mean of the
+estimated-$\sigma_{me,r^n}$ round) -- these two shocks are indeed the model's debt-moving
 shocks. But the inflation panel shows essentially no corresponding gap
-(0.00302 actual vs.\ 0.00307 counterfactual, i.e.\ debt-related shocks
+(0.00290 actual vs.\ 0.00295 counterfactual, i.e.\ debt-related shocks
 account for about 0\% of the average inflation deviation over that
-window); the two paths are visually indistinguishable from 2021Q2 through
+window; 0.00302 vs.\ 0.00307 in the estimated-$\sigma_{me,r^n}$ round); the two paths are visually indistinguishable from 2021Q2 through
 2023Q2 in Figure~\ref{fig:debtcf}. The one episode where the two paths
 diverge visibly is the COVID quarters themselves (2020Q2--Q3), where the
 deficit shock's direct demand effect does move inflation (a
-$-$0.00094 average gap over 2020Q1--Q4). In this estimated model, debt
+$-$0.00095 average gap over 2020Q1--Q4). In this estimated model, debt
 accumulation and the 2021--2023 inflation episode are essentially
 decoupled: the debt buildup is fiscal-shock-driven as expected, but the
 subsequent inflation surge is not.
@@ -1637,7 +1650,7 @@ subsequent inflation surge is not.
 \includegraphics[width=0.85\textwidth]{irf_graphs/debt_counterfactual_zoom.pdf}
 \caption{Actual (smoothed) vs.\ counterfactual $\pi_t$ (top) and $bT_t$
 (bottom) with $\varepsilon^\tau_t,\varepsilon_{g,t}$ shut off, 2019Q1--2024Q4.
-Posterior mean, linear (non-OccBin) Kalman smoother.}
+Posterior mean (fixed-$\sigma_{me,r^n}$ round), linear (non-OccBin) Kalman smoother.}
 \label{fig:debtcf}
 \end{figure}
 
@@ -1658,9 +1671,9 @@ produced given the rest of the smoothed system.
 \toprule
 Window & Variable & Avg.\ actual & Avg.\ counterfactual ($\varepsilon^r_t$ shut off) \\
 \midrule
-2021Q2--2023Q2 & $\pi_t$ dev.\ from SS & 0.00302 & $-$0.00215 \\
-2021Q2--2023Q2 & $r^n_t$ level & 1.00293 & 0.99790 \\
-2020Q1--2020Q4 (COVID) & $\pi_t$ dev.\ from SS & $-$0.00112 & 0.00033 \\
+2021Q2--2023Q2 & $\pi_t$ dev.\ from SS & 0.00290 & $-$0.00221 \\
+2021Q2--2023Q2 & $r^n_t$ level & 1.00295 & 0.99794 \\
+2020Q1--2020Q4 (COVID) & $\pi_t$ dev.\ from SS & $-$0.00112 & 0.00014 \\
 \bottomrule
 \end{tabular}
 \caption{Actual vs.\ counterfactual ($\varepsilon^r_t$ shut off) average deviations/levels. $\pi_t,r^n_t$ in gross quarterly units.}
@@ -1668,18 +1681,19 @@ Window & Variable & Avg.\ actual & Avg.\ counterfactual ($\varepsilon^r_t$ shut 
 \end{table}
 
 Without $\varepsilon^r_t$, inflation over 2021Q2--2023Q2 would have
-averaged \emph{below} steady state ($-0.00215$) instead of above it
-($+0.00302$ actual) -- a 0.00517 average gap, matching the $\varepsilon^r_t$
+averaged \emph{below} steady state ($-0.00221$) instead of above it
+($+0.00290$ actual) -- a 0.00512 average gap, matching the $\varepsilon^r_t$
 row of the shock decomposition exactly, since the two constructions are
-algebraically equivalent. The policy-rate counterfactual shows the actual
+algebraically equivalent (at the estimated-$\sigma_{me,r^n}$ posterior mean:
+$-0.00215$ against $+0.00302$, a 0.00517 gap). The policy-rate counterfactual shows the actual
 rate running about 2 percentage points (annualized) above what the
 estimated rule alone would have set. Pulling the smoothed shock series
 directly confirms the sign and persistence of this: $\varepsilon^r_t$ is
-negative in every quarter from 2021Q2 through 2023Q2 (mean $-0.0094$),
+negative in every quarter from 2021Q2 through 2023Q2 (mean $-0.0089$),
 i.e.\ the smoother reads monetary policy as systematically looser than the
-estimated rule ($b_\pi=3.474$) would prescribe given realized $\pi_t,y_t$
-throughout the episode. This is the mirror image of the COVID quarters,
-where $\varepsilon^r_t$ is mostly positive (mean $+0.0018$ over
+estimated rule ($b_\pi=3.355$) would prescribe given realized $\pi_t,y_t$
+throughout the episode. This is the mirror image of the early COVID quarters,
+where $\varepsilon^r_t$ is positive in 2020Q1--Q2 (mean $+0.0015$ over
 2020Q1--2020Q4) and the counterfactual sign flips accordingly (inflation
 would have been \emph{higher}, not lower, without the shock). Both
 $\pi_t$ and $r^n_t$ move together with the shock's sign here -- a negative
@@ -1694,8 +1708,8 @@ direct, partial-equilibrium effect on the policy rule alone.
 \includegraphics[width=0.85\textwidth]{irf_graphs/mp_counterfactual_zoom.pdf}
 \caption{Actual (smoothed) vs.\ counterfactual $\pi_t$ (top) and $r^n_t$
 (bottom, actual vs.\ what the estimated rule alone would set) with
-$\varepsilon^r_t$ shut off, 2019Q1--2024Q4. Posterior mean, linear
-(non-OccBin) Kalman smoother.}
+$\varepsilon^r_t$ shut off, 2019Q1--2024Q4. Posterior mean
+(fixed-$\sigma_{me,r^n}$ round), linear (non-OccBin) Kalman smoother.}
 \label{fig:mpcf}
 \end{figure}
 
@@ -1721,23 +1735,24 @@ them:
 Variable & Shock & Pre-2020 & 2020Q1--21Q1 & 2021Q2--22Q2 & 2022Q3+ & Total \\
  & & & & (binding) & (post-liftoff) & \\
 \midrule
-$\pi_t$ & $\varepsilon^r_t$ & $-$0.00000 & 0.00025 & 0.00350 & 0.00142 & 0.00517 \\
-$\pi_t$ & $\varepsilon^\tau_t$ & $-$0.00000 & 0.00000 & 0.00000 & 0.00000 & 0.00000 \\
-$\pi_t$ & $\varepsilon_{g,t}$ & 0.00000 & 0.00003 & $-$0.00002 & $-$0.00007 & $-$0.00006 \\
-$bT_t$ & $\varepsilon_{g,t}$ & 0.20564 & 0.14128 & 0.00230 & 0.00267 & 0.35189 \\
-$bT_t$ & $\varepsilon^\tau_t$ & $-$0.01347 & 0.00490 & $-$0.02266 & $-$0.00055 & $-$0.03178 \\
+$\pi_t$ & $\varepsilon^r_t$ & $-$0.00000 & 0.00024 & 0.00359 & 0.00128 & 0.00512 \\
+$\pi_t$ & $\varepsilon^\tau_t$ & $-$0.00000 & $-$0.00000 & 0.00000 & 0.00000 & 0.00000 \\
+$\pi_t$ & $\varepsilon_{g,t}$ & 0.00000 & 0.00004 & $-$0.00002 & $-$0.00007 & $-$0.00005 \\
+$bT_t$ & $\varepsilon_{g,t}$ & 0.16707 & 0.12952 & 0.00369 & 0.00250 & 0.30278 \\
+$bT_t$ & $\varepsilon^\tau_t$ & $-$0.02246 & 0.00799 & $-$0.01884 & 0.00010 & $-$0.03321 \\
 \bottomrule
 \end{tabular}
 \caption{Average contribution over 2021Q2--2023Q2, split by the dates of
-the innovations generating it. Columns 3--6 nest the earlier three-block
+the innovations generating it (fixed-$\sigma_{me,r^n}$ round). Columns 3--6 nest the earlier three-block
 split (old ``in-window'' = columns 5 + 6).}
 \label{tab:cf-zlb}
 \end{table}
 
-Of the monetary-policy shock's 0.00517 contribution to inflation, about
-68\% (0.00350) comes from innovations realized in the binding quarters
-2021Q2--2022Q2, 27\% (0.00142) from post-liftoff innovations, and only 5\%
-(0.00025) from 2020Q1--2021Q1. The earlier conclusion that the result
+Of the monetary-policy shock's 0.00512 contribution to inflation, about
+70\% (0.00359) comes from innovations realized in the binding quarters
+2021Q2--2022Q2, 25\% (0.00128) from post-liftoff innovations, and only 5\%
+(0.00024) from 2020Q1--2021Q1 (68\%, 27\% and 5\% at the
+estimated-$\sigma_{me,r^n}$ posterior mean). The earlier conclusion that the result
 ``does not depend on the smoothed shocks of the ZLB quarters'' therefore
 held only for the narrower 2020Q1--2021Q1 definition: the window's
 largest contributions \emph{do} come from quarters where the floor
@@ -1748,11 +1763,11 @@ unaffected.
 
 The sharper question is whether the monetary-policy result survives on the
 post-liftoff quarters alone, where the linear smoother is not infeasible.
-Table~\ref{tab:cf-sub} reports averages by sub-window for this note's
-baseline posterior mean and for the posterior mean of the later production
-round in which $\sigma_{me,r^n}$ is fixed at 0.0015 rather than estimated
-(the round whose regime path recovers the true ZLB dates;
-Section~\ref{sec:zlb-detection}).
+Table~\ref{tab:cf-sub} reports averages by sub-window for the posterior
+mean of the production round with $\sigma_{me,r^n}$ fixed at 0.0015 (the
+round used throughout this section; its regime path recovers the true ZLB
+dates, Section~\ref{sec:zlb-detection}) and, for comparison, for the
+earlier round in which $\sigma_{me,r^n}$ was estimated (Table~\ref{tab:posteriors}).
 
 \begin{table}[ht]
 \centering
@@ -1761,13 +1776,13 @@ Section~\ref{sec:zlb-detection}).
 \toprule
 Round & Window & Actual $\pi$ dev. & $\varepsilon^r$ contrib. & Cf.\ ($\varepsilon^r$ off) & Mean $\varepsilon^r$ & Mean $r^n$ \\
 \midrule
-Baseline & 2021Q2--2023Q2 & 0.00302 & 0.00517 & $-$0.00215 & $-$0.0094 & 1.0029 \\
-Baseline & 2021Q2--2022Q2 (binding) & 0.00292 & 0.00581 & $-$0.00289 & $-$0.0115 & 0.9995 \\
-Baseline & 2022Q3--2023Q2 (post-liftoff) & 0.00315 & 0.00438 & $-$0.00123 & $-$0.0068 & 1.0072 \\
-\midrule
 $\sigma_{me,r^n}$ fixed & 2021Q2--2023Q2 & 0.00290 & 0.00512 & $-$0.00221 & $-$0.0089 & 1.0030 \\
 $\sigma_{me,r^n}$ fixed & 2021Q2--2022Q2 (binding) & 0.00286 & 0.00593 & $-$0.00307 & $-$0.0113 & 0.9994 \\
 $\sigma_{me,r^n}$ fixed & 2022Q3--2023Q2 (post-liftoff) & 0.00295 & 0.00410 & $-$0.00115 & $-$0.0058 & 1.0074 \\
+\midrule
+$\sigma_{me,r^n}$ estimated & 2021Q2--2023Q2 & 0.00302 & 0.00517 & $-$0.00215 & $-$0.0094 & 1.0029 \\
+$\sigma_{me,r^n}$ estimated & 2021Q2--2022Q2 (binding) & 0.00292 & 0.00581 & $-$0.00289 & $-$0.0115 & 0.9995 \\
+$\sigma_{me,r^n}$ estimated & 2022Q3--2023Q2 (post-liftoff) & 0.00315 & 0.00438 & $-$0.00123 & $-$0.0068 & 1.0072 \\
 \bottomrule
 \end{tabular}
 \caption{Monetary-policy counterfactual by sub-window, linear smoother at
@@ -1778,31 +1793,32 @@ deviation (rows may differ by rounding).}
 \end{table}
 
 It does. On the post-liftoff quarters alone, shutting off
-$\varepsilon^r_t$ still moves average inflation from $+0.00315$ to
-$-0.00123$ (baseline) and from $+0.00295$ to $-0.00115$ (fixed-$\sigma_{me,r^n}$
-round): the shock's contribution (0.00438, 0.00410) exceeds the entire
-actual deviation in both rounds, and the smoothed shock remains negative
-(mean $-0.0068$, $-0.0058$). The binding-quarter figures are larger
-(0.00581, 0.00593; mean shock about $-0.0115$) but are the ones the linear
-smoother cannot be trusted on: the smoothed policy rate there averages
-0.9995, below the floor. They describe what the linear model needs in
+$\varepsilon^r_t$ still moves average inflation from $+0.00295$ to
+$-0.00115$ (fixed-$\sigma_{me,r^n}$ round) and from $+0.00315$ to $-0.00123$
+(estimated-$\sigma_{me,r^n}$ round): the shock's contribution (0.00410,
+0.00438) exceeds the entire actual deviation in both rounds, and the smoothed
+shock remains negative (mean $-0.0058$, $-0.0068$). The binding-quarter
+figures are larger (0.00593, 0.00581; mean shock about $-0.0113$) but are the
+ones the linear smoother cannot be trusted on: the smoothed policy rate there
+averages 0.9994, below the floor. They describe what the linear model needs in
 order to match the observed rate, not an estimate of what policy
 contributed.
 
-Re-running the whole of Sections~\ref{sec:cf-debt}--\ref{sec:cf-mp} at the
-$\sigma_{me,r^n}$-fixed posterior mean changes the headline numbers
-little: over 2021Q2--2023Q2, inflation averages 0.00290 against a
-debt-shocks-off counterfactual of 0.00295 (baseline: 0.00302 against
-0.00307), while debt-to-GDP would average about 27 points lower without
-$\varepsilon^\tau_t,\varepsilon_{g,t}$ (baseline: about 32); the
-$\varepsilon^r_t$-off counterfactual is $-0.00221$ (baseline:
-$-0.00215$). The policy-rule coefficients behind these differences are
-also close across likelihood methods: Section~\ref{sec:zlb-detection}
-reports that an independent smooth-floor, particle-filter mode search
-lands within roughly 1--4\% of OccBin's mode on every structural
-parameter, so the counterfactuals are not sensitive to this choice. That
-cross-validation concerns parameters, not the smoother, and does not
-supply a ZLB-consistent smoothed shock path.
+The two rounds are not noticeably different for this section's questions:
+over 2021Q2--2023Q2, inflation averages 0.00290 against a debt-shocks-off
+counterfactual of 0.00295 (estimated round: 0.00302 against 0.00307), and the
+$\varepsilon^r_t$-off counterfactual is $-0.00221$ ($-0.00215$); the
+COVID-quarter averages and policy-rate counterfactual (1.00295 against 0.99794,
+versus 1.00293 against 0.99790) are likewise nearly identical. The one
+visible difference is the size of the debt counterfactual, about 27 percentage
+points of GDP lower without $\varepsilon^\tau_t,\varepsilon_{g,t}$ against
+about 32 -- a 16\% difference in a diagnostic whose message (these shocks drive
+debt, not inflation) is the same in both. The policy-rule coefficients behind
+these results are also close across likelihood methods:
+Section~\ref{sec:zlb-detection} reports that an independent smooth-floor,
+particle-filter mode search lands within roughly 1--4\% of OccBin's mode on
+every structural parameter. That cross-validation concerns parameters, not the
+smoother, and does not supply a ZLB-consistent smoothed shock path.
 
 \subsection{Summary}
 
@@ -1813,12 +1829,14 @@ policy or debt accumulation, as the model's own account of what drove the
 average inflation deviation over that window despite clearly driving the
 contemporaneous debt buildup, while the monetary-policy shock
 ($\varepsilon^r_t$) alone accounts for more than the entire average
-deviation (0.00517 against an actual deviation of 0.00302 -- other shocks
+deviation (0.00512 against an actual deviation of 0.00290 -- other shocks
 net out mildly negative over the same window). The monetary-policy result
 survives restriction to the post-liftoff quarters 2022Q3--2023Q2
-(contribution 0.00438 against an actual deviation of 0.00315) and
-re-estimation with $\sigma_{me,r^n}$ fixed (0.00410 against 0.00295), but
-roughly two-thirds of the full-window contribution comes from innovations
+(contribution 0.00410 against an actual deviation of 0.00295) and is
+essentially unchanged at the posterior mean of the earlier round with
+$\sigma_{me,r^n}$ estimated (0.00517 against 0.00302 for the full window;
+0.00438 against 0.00315 post-liftoff), but
+about 70\% of the full-window contribution comes from innovations
 in the binding quarters 2021Q2--2022Q2, where the linear smoother is
 infeasible (Section~\ref{sec:cf-zlb}); the full-window magnitude should
 not be read as precise. Both findings are conditional on the
