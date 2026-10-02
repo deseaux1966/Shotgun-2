@@ -330,6 +330,7 @@ in \emph{levels} instead; the current build demeans in logs, matching
 the model.
 
 \subsection{Two-stage mode-finding}
+\label{sec:twostage}
 OccBin's piecewise-linear likelihood is nonsmooth at ZLB regime
 switches, and gradient-based optimizers such as \texttt{csminwel} tend
 to fail on it directly. Estimation therefore proceeds in two stages,
@@ -499,6 +500,7 @@ posterior-covariance file, \texttt{mh\_replic=50{,}000},
 1151.14.
 
 \subsection{Smoother limitation}
+\label{sec:zlb-detection}
 OccBin's post-estimation nonlinear smoother (both the iterative and
 conditional variants) again did not reach a fixed point for the
 smoothed ZLB regime path, so no OccBin-consistent smoothed shock or
@@ -507,6 +509,601 @@ not ZLB-consistent and is not reported here). This does not affect the
 posterior parameter estimates below, which are informed by OccBin's
 \emph{filter} (the forward likelihood pass used throughout MCMC, which
 did enforce the ZLB across the full sample) rather than the smoother.
+
+\paragraph{Which quarters does the estimation flag as ZLB-binding?}
+The saved results do store OccBin's regime history (\texttt{oo\_.occbin.smoother.regime\_history}
+and \texttt{realtime\_regime\_history}), and Figure~\ref{fig:zlbreg} compares
+it with a model-independent check: quarters in which the linear
+smoother's notional rate $r^{n,notional}_t$ falls below the floor of 1.
+The two do not agree, and the OccBin path should not be taken at face
+value. The OccBin history flags 2009Q1--2019Q4 (44 quarters) and
+2020Q2--2022Q1 (8 quarters) as binding, and its real-time and smoothed
+histories are identical. This is Dynare's fallback: \texttt{warning\_flag}~=~322
+means the smoother did not reach a fixed point and the reported
+smoothed regimes are replaced by the real-time (forward filter) path.
+Re-running the smoother at the posterior mean with more iterations, a
+larger solver budget, and the data-implied ZLB dates as the starting
+regime guess left this outcome unchanged (tightening the solver made it
+fail outright), so the saved path is the filter's own. Binding through 2019 conflicts with the data
+(the policy rate was well above zero from late 2016), and the OccBin
+smoother's own notional-rate path is erratic (it swings above 1.02 in
+2021 while flagged as binding), consistent with the convergence warnings
+the smoother raised (\texttt{warning\_flag}~=~322) and with the
+fixed-point failure described above. The linear check instead gives
+2009Q3--2016Q3 and 2020Q3--2022Q1, much closer to the
+2009Q1--2015Q4 and 2020Q1--2021Q4 episodes cited in Section~1; the two
+methods differ in 15 quarters. Note that the linear check is a fragile
+threshold test: in 2009--2016 the notional rate sits within about
+$10^{-3}$ of the floor. The episode dates cited in Section~1 come from the
+observed policy-rate series rather than from the estimated regime path,
+and this estimation cannot pin the binding quarters down more sharply.
+
+The floor itself is not estimated: \texttt{rn\_lb}~=~1 is calibrated, and the
+\texttt{occbin\_constraints} block switches regimes when
+$\log r^{n,notional}_t<-10^{-6}$. One possible source of the
+misclassification is a mismatch between that floor and the demeaned
+observable, since a model rate of 1 corresponds to
+$r^{n,obs}_t=-\log(1.002214)=-0.00221$. Checking directly, $r^{n,obs}_t$
+averages $-0.00293$ over 2009--2015 and $-0.00304$ over 2020Q2--2021Q4,
+implying model rates of 0.99928 and 0.99917: about 0.0007 below the floor,
+less than the estimated measurement-error standard deviation of
+$r^{n,obs}$ (about 0.003). The demeaning is therefore roughly consistent
+with the floor and does not explain the misclassification. In 2017--2019,
+$r^{n,obs}_t$ averages $+0.0009$ (implied rate 1.0031), well above the
+floor, so the OccBin binding flag there is not driven by the observed
+policy rate. Because the real-time (forward filter) history flags the
+same quarters, and the likelihood is built from that pass, the flag
+cannot be attributed to the smoother's non-convergence alone.
+
+Decomposing the rule at the posterior mean identifies the cause. Binding
+requires $b_\pi\Delta\log\pi_t+b_y\Delta\log y_t+z^r_t<-0.0022$, the gap
+between the steady-state policy rate (1.0022, 0.89\% annualized) and the
+floor. Averaged over 2017--2019 the three terms are $-0.0069$ (inflation),
+$+0.0022$ (output), and $-0.0002$ (monetary shock), a total of $-0.0048$:
+the inflation term alone pushes the notional rate below the floor, and
+with $b_\pi=3.47$ an inflation shortfall of only 0.25 percentage points
+(annualized) below steady state suffices. The steady state is pinned to
+the sample mean, which includes the 2021--23 inflation surge, so
+2017--2019 inflation (near the 2\% target) appears low. The filter is
+therefore behaving as the model implies: a strong, non-inertial rule with
+a small cushion above the floor calls for negative rates in those years,
+and the observed positive rates are absorbed by measurement error in
+$r^{n,obs}$ (about one standard deviation there).
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{irf_graphs/zlb_regimes.pdf}
+\caption{Top: notional policy rate from the linear and OccBin smoothers
+against the ZLB floor of 1 (shaded: quarters in which the linear
+smoother's notional rate is below 1). Bottom: ZLB regime by quarter under the three measures.}
+\label{fig:zlbreg}
+\end{figure}
+
+\paragraph{Is the 2017--2019 binding self-reinforcing?}
+Reserves $n_t$ and currency $m_t$ are not observables (Table~\ref{tab:data}),
+and the model-implied values in 2017--2019 are close to steady state
+($n_t$ averages 9.45 vs.\ 9.38, $m_t$ 9.51 vs.\ 9.46); neither enters the
+policy rule directly. To bound any indirect channel through them, we
+treated binding as an additional policy-rate shock in the linear model at the posterior mean, of size
+$-\log r^{n,notional}_t$ in each binding quarter (average 0.0026 over
+2016Q4--2019Q4, peak 0.011), and measured its total feedback on the other
+variables, averaged over 2017--2019. The effects on $n_t$ and $m_t$ are
+negligible (+0.16\% and +0.08\% of steady state) and on $y_t$ essentially
+zero, but inflation is lower by 0.00099 per quarter (0.4 percentage points
+annualized) and the loan rate by 0.0008: holding the rate at the floor
+when the rule calls for less keeps policy tighter than it would otherwise
+be. With $b_\pi=3.47$ that lower inflation reduces the notional rate by a
+further $\approx0.0034$, against an average 2017--2019 shortfall of
+$-0.0048$ relative to the binding threshold of $-0.0022$. Without the
+feedback the shortfall would be about $-0.0014$, i.e.\ not binding, so the
+spell may be partly self-sustaining: binding depresses inflation enough to
+justify itself. The carry-over of the genuine 2009--2016 and 2020--22
+spells into 2017--2019 is essentially zero. This is a first-order,
+unanticipated-shock approximation of what OccBin does with anticipated
+spells, so it suggests the possibility rather than proving it. A direct
+test was inconclusive: evaluating the OccBin filter and smoother at the
+posterior mean from four different initial regime guesses (default
+relaxed; binding through 2016Q3 and 2020Q2--2022Q2 with 2016Q4 onward
+relaxed; one long spell through 2019Q4; all relaxed) gives an identical
+log posterior (1266.559), \texttt{warning\_flag}, and regime path in every
+case, so the filter either reaches the same fixed point from any start or
+ignores the guess, and these runs cannot distinguish the two.
+
+\paragraph{Does a ZLB equilibrium exist at all?} The regime-search
+failures above raise a more basic question: does a well-defined
+equilibrium in which the floor genuinely binds exist for this model at
+these parameters, independent of whether OccBin's switching search can
+find it? This is tested directly, rather than inferred from the
+switching search's behavior, using a companion file
+(\texttt{mmt8bOccBin3\_covid\_bT\_baa\_bindonly.mod}, built the same way
+as the existing \texttt{\_bkonly.mod} determinacy companion) that imposes
+$r^n_t=\underline{r}^n$ \emph{permanently} as the only monetary policy
+equation -- no \texttt{occbin\_constraints} block, no switching -- and
+asks whether that system, on its own terms, has a steady state and
+whether that steady state is determinate. At the posterior mean, a steady
+state does exist and is economically unremarkable: $y=1.020$, $c=0.820$,
+$h=0.943$, $\pi=1.00653$ (2.63\% annualized), $r^\ell=1.010$, and
+$r^{n,notional}=1.00181$ (the notional rate's own equation is left
+active, unassigned to $r^n_t$, purely for reference). But
+Blanchard-Kahn's order condition fails at this steady state: only 3
+eigenvalues lie outside the unit circle against 4 forward-looking
+variables, so the permanently-bound system is \emph{locally
+indeterminate}. This is the standard ZLB-indeterminacy mechanism --
+pinning $r^n_t$ at a constant removes the Taylor-rule feedback that
+normally rules out self-fulfilling inflation paths -- and it matches
+Ascari, Mavroeidis, and McClung's (2023) result below, not an anomaly
+specific to this model. A further inconsistency: $r^{n,notional}=1.00181$
+at this fixed point is \emph{above} the floor, so the same equilibrium
+fails OccBin's own bind/relax test ($\log r^{n,notional}<0$) -- the
+policy rule itself would not choose to bind here, so this permanently-
+bound fixed point is not self-justifying in the sense the switching
+search requires. Taken together: a bind-regime equilibrium exists, so
+non-existence alone does not explain the search failures, but it is
+indeterminate and not obviously reconcilable with the regime-consistency
+condition OccBin's switching search imposes -- a concrete, model-specific
+instance of exactly the kind of difficulty the published literature below
+documents can arise near the ZLB.
+
+\paragraph{Attempts to add interest-rate smoothing.}
+Since a non-inertial rule is the source of the 2017--2019 flag, we tried
+adding smoothing that operates only away from the ZLB (``Version A''):
+\[
+r^{n,notional}_t=(r^n_{t-1})^{\rho_r}\Big[(r^\ell)^{a_i}\big(\tfrac{\pi_t}{\pi}\big)^{b_\pi}
+\big(\tfrac{y_t}{y}\big)^{b_y}e^{z^r_t}\Big]^{1-\rho_r},
+\]
+with the lag of the \emph{actual} rate entering only the relaxed-regime
+rule (the binding regime, $r^n_t=1$, ignores it). Model files are
+\texttt{mmt8bOccBin3\_covid\_bT\_baa\_smooth*.mod}; the original files are
+unchanged. The results were negative.
+
+\emph{Stage 1 (linear filter).} Smoothing is strongly favored: with a
+Beta(0.75, 0.10) prior the mode is $\rho_r=0.955$ (s.d.\ 0.014) with
+$b_\pi=7.86$, and the Laplace log data density rises from 1113.7 to
+1174.9 (a gain of about 61 for one parameter); a Uniform(0.01, 0.99)
+prior gives $\rho_r=0.967$ (s.d.\ 0.011), $b_\pi=9.00$, log density
+1177.0, so the high persistence is not a prior artifact. The other
+parameters barely move. $a_i$ is not identified under the linear filter
+(it returned its prior mean, 0.49, and shifts only the steady-state
+rate), so it was fixed at 0.181 for these runs. With $a_i=0.181$ the
+notional rate is below 1 in 2009Q3--2016Q1 and 2020Q3--2022Q1 and never in
+2017--2019.
+
+\emph{Stage 2 (OccBin likelihood).} The OccBin filter, however, returns an
+infinite likelihood at the Stage-1 mode (it cannot find a consistent regime
+path). Evaluating on a grid around the mode, the likelihood was finite at
+only 47\% of points ($\rho_r\in[0.93,0.97]$, $b_\pi\in[5,11]$) and at no
+point for $\rho_r=0.97$; a \texttt{csminwel} search from a finite start
+stalled with a singular Hessian. Table~\ref{tab:smoothprof} profiles the
+log posterior over $\rho_r$, maximizing over $b_\pi$, $b_y$, $\sigma_r$,
+and $\sigma_{me,r^n}$ (Nelder--Mead, other parameters at their Stage-1
+values). No finite point was found for $\rho_r\le0.5$, and the best value,
+1260.0 at $\rho_r=0.95$, is below the 1266.2 of the original (no-smoothing)
+OccBin mode, although only four of 23 parameters were re-optimized.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+$\rho_r$ & Best log posterior & $b_\pi$ & $(1-\rho_r)\,b_\pi$ \\
+\midrule
+$\le 0.5$ & no finite point & -- & -- \\
+0.80 & 1256.8 & 2.82 & 0.56 \\
+0.90 & 1256.6 & 4.71 & 0.47 \\
+0.95 & 1260.0 & 6.95 & 0.35 \\
+\bottomrule
+\end{tabular}
+\caption{Profile of the OccBin log posterior over $\rho_r$ (see text).
+The original no-smoothing model attains 1266.2 at its own mode.}
+\label{tab:smoothprof}
+\end{table}
+
+At the best point ($\rho_r=0.95$), the real-time regime path removes the
+spurious 2017--2019 binding (none of those quarters is flagged), but it
+flags only 21 of the 41 quarters in which the observed policy rate was at
+the floor (2009Q1--2016Q4 and 2020Q2--2022Q2): the 2009--2015 spell is
+broken into scattered pieces and only 2 of the 9 quarters in 2020Q2--2022Q2
+are flagged (2021 is entirely relaxed), with the near-zero observed rate
+absorbed by $r^{n,obs}$ measurement error. Smoothing therefore trades one
+misclassification for another and does not improve the OccBin fit; the
+gain seen under the linear filter appears to reflect smoothing standing in
+for the ZLB when the ZLB is ignored. We retain the original specification
+and treat the over-extended 2017--2019 binding as a documented
+limitation. Its effect on the reported posterior, in particular on
+$b_\pi$ and $a_i$, has not been quantified.
+
+\paragraph{Attempts to re-anchor the policy rule to a fixed 2\% inflation
+target.} Section~\ref{sec:zlb-detection} traces the 2017--2019
+misclassification to the rule's inflation term being measured against the
+model's own endogenous steady state, $\log r^{n,notional}_t$ falling below
+the floor whenever inflation dips modestly below that (elevated, deficit-
+financed) benchmark rather than below a conventional target. A natural fix
+is to reference a fixed 2\% annual target instead: the calibration block
+already defines $\pi^{ss}=1.02^{0.25}=1.004963$ for exactly this purpose
+(Table~\ref{tab:calib}), but it was, in the specification examined above,
+used only in the tax-rule/debt-issuance block, \emph{not} in the policy
+rule itself, which used \texttt{STEADY\_STATE(pig)}. Replacing
+\texttt{STEADY\_STATE(pig)} with $\pi^{ss}$ in
+\[
+r^{n,notional}_t = (r^{\ell,ss})^{a_i}\Big(\frac{\pi_t}{\pi^{ss}}\Big)^{b_\pi}
+\Big(\frac{y_t}{y^{ss}}\Big)^{b_y} e^{z^r_t}
+\]
+and re-solving the steady state at the current posterior mean (all other
+parameters unchanged) produces a steady state with $\pi_{ss}=0.99899$
+quarterly ($-0.41\%$ annualized -- mild deflation, not 2\% inflation) and
+$r^{n,notional}_{ss}=0.99223$: \emph{below} the ZLB floor of 1 in the
+model's own deterministic steady state. Blanchard-Kahn order and rank
+conditions are still satisfied (4 forward-looking eigenvalues), so the
+linearized system is well-posed, but a steady state that already violates
+the floor is not economically usable for an occasionally-binding-constraint
+model, whose premise is that the floor is an occasional, shock-driven
+excursion away from a steady state comfortably above it. A sweep of
+$a_i\in\{0.184,0.30,0.49,0.65,0.80,0.95,0.99\}$ (holding all other
+parameters fixed) left $\pi_{ss}$, $r^{\ell}_{ss}$, and
+$r^{n,notional}_{ss}$ completely unchanged to five decimal places: $a_i$
+enters the rule only as the exponent on $(r^{\ell,ss})^{a_i}$, and since
+$r^{\ell,ss}\approx1.00229$ in this steady state, raising a number that
+close to 1 to any power between 0 and 1 moves the result by at most
+$\approx$0.02 percentage points -- roughly $1/40$ of the $\approx$0.8
+percentage point gap that would need to be closed. The mechanism is not
+a fixable calibration choice but a genuine tension between the model's
+seigniorage need (financing the calibrated deficit, which is what pushes
+the \emph{endogenous} steady state to 3.63\% annualized in the reported
+specification) and a rule pinned to a conventional 2\% target evaluated at
+policy coefficients ($b_\pi=3.36$, $a_i=0.184$) estimated under the old
+rule. Resolving it would require re-estimating $b_\pi,b_y$ jointly with
+the new rule specification, or revising the fiscal calibration
+($\bar\tau,g$) that drives the seigniorage need, with no guarantee either
+produces a steady state clearing the floor by a sensible margin. This was
+not pursued further.
+
+\paragraph{Is this a known difficulty?} Yes. Boehl (2022), benchmarking a
+faster alternative algorithm against OccBin on a medium-scale New
+Keynesian model with a single occasionally-binding interest-rate lower
+bound -- the same class of constraint as here -- reports that OccBin's
+Newton-like solver (Guerrieri and Iacoviello, 2015) ``can not draw on the
+nice convergence properties of the regular real-valued Newton method,''
+which ``renders their method impractical once OBC problems are not well
+behaved,'' and quantifies actual failures in a benchmark run: two of the
+sampled parameter draws returned no solution at all for OccBin, and the
+paper notes generally that ``this causes a very small number of samples
+to not converge.'' This is a published, quantified precedent for OccBin's
+regime-consistency search failing outright, in the same single-ZLB-bound
+setting used here, not merely a difficulty specific to this model. A
+related but distinct concern is theoretical rather than algorithmic:
+Ascari, Mavroeidis, and McClung (2023) show that standard
+rational-expectations models with an occasionally-binding ZLB constraint
+can, at some parameter or shock configurations, have no solution at all
+or multiple solutions -- raising the possibility that some of the points
+where OccBin's search fails have no consistent regime path to find in the
+first place, not merely one the algorithm cannot locate.
+
+\paragraph{Implications for the reported posterior.} The difficulties
+documented in this subsection -- the 2017--2019 misclassification, its
+partial and only partially successful remediation attempts, and the
+OccBin likelihood's general fragility near this boundary (Sections
+\ref{sec:zlb-detection}--\ref{sec:cf-zlb}) -- are specifically failures of
+OccBin's piecewise-linear regime-consistency search, not of the underlying
+Bayesian estimation. Every retained MCMC draw, by construction, has a
+successfully evaluated OccBin likelihood (that is how it was accepted),
+so the posterior in Table~\ref{tab:posteriors} reflects genuine exploration
+under the true (ZLB-consistent) likelihood, not a fallback linear
+approximation. What does \emph{not} carry over automatically is evaluating
+the model at a single representative point such as the posterior mean:
+that point is a purely arithmetic average of the retained draws, never
+itself evaluated during estimation, and it can (and in exercises reported
+elsewhere did) fall where OccBin's regime search fails outright even
+though every draw contributing to the average was individually
+evaluable. This does not affect the parameter posterior itself, nor any
+exercise conducted on the model's plain linear (non-ZLB, ``RELAX''-regime)
+solution -- verified directly by re-solving that linear system at a
+posterior mean where the OccBin filter failed, which converged cleanly
+with Blanchard-Kahn conditions satisfied. The determinacy/E-stability
+analysis (Section~\ref{sec:detestab}) and the counterfactual and
+decomposition exercises (Section~\ref{sec:cf-method}) all use this linear
+solution and are unaffected; only OccBin-specific exercises evaluated at
+the posterior mean (rather than at an individual draw, such as the
+posterior mode) are at risk.
+
+\paragraph{An alternative: smoothing the floor instead of switching
+regimes.} A structurally different way to avoid OccBin's
+regime-consistency search altogether is to replace the piecewise floor
+with a smooth approximation of it, then estimate the resulting (kink-free)
+nonlinear model with a standard higher-order perturbation plus
+particle-filter likelihood instead of OccBin's. This is a documented
+approach: Andreasen and Kronborg (2022, \emph{Quantitative Economics} 13,
+1171--1202) solve a New Keynesian model with the ZLB imposed via ``a
+smooth nonlinear modification of the standard Taylor rule,'' paired with
+their ``extended perturbation'' method and a particle filter; Richter and
+Throckmorton (2015, \emph{The B.E.\ Journal of Macroeconomics} 15(1),
+157--182) discuss smoothing the floor for global-solution numerical
+convergence. Both papers' exact functional forms could not be extracted
+here -- both PDFs obtained were scanned or access-protected -- so the
+specific logistic form used below is our own construction, not a
+transcription of either paper's calibrated smoothing parameter.
+
+A companion file, \texttt{mmt8bOccBin3\_covid\_bT\_baa\_softzlb.mod},
+replaces the \texttt{occbin\_constraints} block with a single equation:
+\[
+r^n_t = \underline{r}^n + \frac{r^{n,notional}_t-\underline{r}^n}
+{1+\exp\!\big(-\kappa(r^{n,notional}_t-\underline{r}^n)\big)},
+\]
+a logistic soft-max of $(r^{n,notional}_t,\underline{r}^n)$ that converges
+to $\max(r^{n,notional}_t,\underline{r}^n)$ -- OccBin's exact floor -- as
+$\kappa\to\infty$. With $\kappa=2000$ the transition width (roughly
+$10/\kappa$ in gross-quarterly-rate units, $\approx0.005$) is not
+negligible relative to the steady-state gap above the floor
+($r^n_{ss}-\underline{r}^n\approx0.0022$ at the posterior mean), producing
+a small steady-state ``shaving'' artifact ($r^n_{ss}=1.00218$ against
+$r^{n,notional}_{ss}=1.00221$); $\kappa$ remains an uncalibrated free
+choice to sensitivity-check, not a settled value. At these parameters the
+smoothed model's steady state is well-defined and the Blanchard-Kahn order
+and rank conditions are verified (4 eigenvalues outside the unit circle
+for 4 forward-looking variables) -- a cleaner local property than the
+permanently-bound piecewise system above, though the two are different
+questions (a linearization around the smoothed model's own near-floor
+steady state, versus the piecewise system pinned exactly at the floor).
+
+\paragraph{Particle-filter mechanics: two implementation findings.}
+Getting this model estimated with Dynare's particle filter
+(\texttt{options\_.particle.status}, dispatching to
+\texttt{non\_linear\_dsge\_likelihood.m}) surfaced two points worth
+recording for anyone extending this line of work. First, Dynare's
+particle-filter initial checks
+(\texttt{initial\_estimation\_checks.m:116--120}) require measurement
+error registered in the observation-noise matrix $M_H$ specifically; the
+$\varepsilon^{me}_t$ terms in this project's measurement equations are
+ordinary structural shocks loading through $\Sigma_e$, invisible to that
+check even though they are the same additive iid noise econometrically.
+The diagnostic file therefore declares measurement error the standard
+Dynare way (\texttt{var y\_obs; stderr ...;} in the \texttt{shocks} block)
+rather than as explicit \texttt{eps\_*\_me} shocks -- a mechanical
+reformulation, not a modeling change.
+
+Second, and more consequential: Dynare's Monte-Carlo particle filters
+(\texttt{sequential\_importance\_particle\_\allowbreak filter.m:72}, and
+identically in the auxiliary and conditional particle filters) call
+\texttt{set\_dynare\_seed\_local\_\allowbreak options([],false,'default')}
+at the start of every likelihood evaluation, which unconditionally resets
+MATLAB's random-number generator to a fixed seed -- confirmed directly by
+evaluating the likelihood at identical parameters under three different
+\texttt{set\_dynare\_seed()} calls and obtaining bit-identical results to
+12 decimal places. This is a deliberate common-random-numbers design: it
+makes the particle-filter likelihood a smooth, reproducible function of
+the parameters, which helps an optimizer (though Dynare's own mode-search
+warning, quoted below, is right that a gradient-based one still struggles
+with residual resampling-induced kinks) but is the wrong property for
+Metropolis-Hastings estimation. Valid particle-MCMC (Andrieu and Roberts,
+2009, \emph{Annals of Statistics} 37(2), 697--725) requires the likelihood
+estimator to be unbiased \emph{and independently redrawn at every
+iteration}; with the RNG frozen to the same seed on every call, an MH
+chain built directly on this filter would repeatedly evaluate the same
+frozen particle realization rather than integrating out fresh
+approximation noise, and would not carry the usual guarantee of targeting
+the true posterior. Consequently, only mode-finding (not MCMC) is
+attempted below.
+
+\paragraph{Mode comparison.} \texttt{mode\_compute=4} (gradient-based)
+immediately triggers Dynare's own interactive warning that ``particle
+filtering introduces discontinuities in the objective function w.r.t the
+parameters'' and recommends a derivative-free method; \texttt{mode\_compute=8}
+(Dynare's own Nelder-Mead simplex) is used instead. Starting from OccBin's
+own posterior mode -- not the posterior mean of
+Table~\ref{tab:posteriors}, but the mode found by this production round's
+own mode-search step ($-\log\text{posterior}=1291.297$) --
+the smooth-ZLB/particle-filter mode search
+(\texttt{mmt8bOccBin3\_covid\_bT\_baa\_\allowbreak softzlb\_mode.mod})
+converges, at 5{,}000 particles, to:
+
+\begin{center}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Parameter & OccBin mode & Smooth-ZLB mode (5{,}000 part.) & Diff \\
+\midrule
+$v^a$           & 2.7466 & 2.8497 & +3.8\% \\
+$\eta$          & 1.2596 & 1.2802 & +1.6\% \\
+$b_\pi$         & 3.2795 & 3.2547 & -0.8\% \\
+$b_y$           & 0.0721 & 0.0727 & +0.8\% \\
+$a_i$           & 0.1809 & 0.1843 & +1.9\% \\
+$b_r$           & 0.2554 & 0.2618 & +2.5\% \\
+$\rho_z$        & 0.5026 & 0.5088 & +1.2\% \\
+$\varphi_b$     & 0.0938 & 0.0942 & +0.4\% \\
+\midrule
+$\sigma_a$      & 0.0195 & 0.0177 & -9.3\% \\
+$\sigma_z$      & 0.0241 & 0.0244 & +1.4\% \\
+$\sigma_{va}$   & 0.0463 & 0.0490 & +5.7\% \\
+$\sigma_{xa}$   & 0.0421 & 0.0429 & +1.9\% \\
+$\sigma_g$      & 0.0295 & 0.0301 & +2.3\% \\
+$\sigma_r$      & 0.0180 & 0.0183 & +2.0\% \\
+$\sigma_\tau$   & 0.0315 & 0.0320 & +1.7\% \\
+$\sigma_L$      & 0.0636 & 0.0647 & +1.7\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Every structural parameter -- including $b_\pi$, $b_y$, and $a_i$, which
+jointly govern how aggressively the rule responds and how close to the
+floor it gets -- lands within about 1--4\% of OccBin's mode. Most shock
+standard deviations agree similarly closely; the two exceptions are
+$\sigma_a$ ($-9.3\%$) and $\sigma_{va}$ ($+5.7\%$), moving in opposite
+directions, plausibly because all seven measurement-error standard
+deviations are calibrated (fixed at OccBin's own mode values) rather than
+re-estimated here, so any residual adjustment the smoothed model wants in
+fitting $y_{obs}$ and $d_{obs}$ has nowhere to go except into the
+structural shocks loading on the same observables. As a stability check,
+the same search was first run at 1{,}000 particles (for speed) and then
+warm-started at 5{,}000: every parameter moved by less than 1.6\% between
+the two, and the achieved $-\log\text{posterior}$ rose from 1093.156 to
+1182.373 -- moving closer to OccBin's 1291.297 as expected from a less
+biased (more particles) likelihood approximation, though this level is
+not otherwise comparable to OccBin's: different filter, different
+approximation order, and measurement error entering through $M_H$ rather
+than as structural shocks all change what is being evaluated.
+
+This is a real cross-validation, not a replacement for the estimation
+reported in this paper: two structurally different
+likelihood-evaluation methods -- OccBin's piecewise-linear
+regime-switching Kalman filter/smoother and a smooth logistic floor with
+second-order perturbation and a particle filter -- land in essentially
+the same corner of parameter space, at a point (the posterior mean) where
+the OccBin-specific machinery itself fails to evaluate. Given the seeding
+limitation above, this is offered as a mode comparison only; a genuine
+MCMC exploration under the smooth specification would first require
+patching Dynare's particle filters to draw fresh randomness per
+iteration.
+
+\paragraph{Sensitivity to $\kappa$.} $\kappa=2000$ above is an uncalibrated
+free choice, so it is checked two ways. First, a steady-state-only sweep
+(\texttt{mmt8bOccBin3\_covid\_bT\_baa\_softzlb\_kappasweep.mod}, no
+estimation) at OccBin's posterior mode:
+
+\begin{center}
+\begin{tabular}{@{}lrrrc@{}}
+\toprule
+$\kappa$ & $r^n_{ss}$ & $r^{n,notional}_{ss}$ & Gap & BK order+rank \\
+\midrule
+1{,}000  & 1.001944 & 1.002167 & 0.000223 & verified \\
+2{,}000  & 1.002184 & 1.002210 & 0.000026 & verified \\
+5{,}000  & 1.002216 & 1.002216 & 0.00000003 & verified \\
+10{,}000 & 1.002216 & 1.002216 & 0.0 & verified \\
+20{,}000 & 1.002216 & 1.002216 & 0.0 & verified \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The shaving artifact shrinks fast and is essentially gone by
+$\kappa=5{,}000$; $\kappa=1{,}000$ carries about 8.5 times $\kappa=2{,}000$'s
+artifact (still small in absolute terms, $\approx0.02$pp annualized).
+Determinacy holds at every value tested.
+
+Second, a full mode search at $\kappa=1{,}000$
+(\texttt{mmt8bOccBin3\_covid\_bT\_baa\_softzlb\_mode\_k1000.mod}, 1{,}000
+particles, cold-started from OccBin's mode -- identical protocol to the
+original $\kappa=2{,}000$, 1{,}000-particle run) converges, in 573
+iterations, to $-\log\text{posterior}=1097.084$ (against $1093.156$ for
+$\kappa=2{,}000$ under the same protocol -- not comparable to OccBin's
+$1291.297$, but directly comparable to each other since particle count,
+starting point, and every other choice are held fixed):
+
+\begin{center}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Parameter & OccBin mode & $\kappa=1{,}000$ mode & $\kappa=2{,}000$ mode \\
+\midrule
+$v^a$          & 2.7466 & 2.7248 (-0.8\%) & 2.8445 (+3.6\%) \\
+$\eta$         & 1.2596 & 1.2388 (-1.6\%) & 1.2703 (+0.8\%) \\
+$b_\pi$        & 3.2795 & 3.2029 (-2.3\%) & 3.3034 (+0.7\%) \\
+$b_y$          & 0.0721 & 0.0743 (+3.1\%) & 0.0729 (+1.1\%) \\
+$a_i$          & 0.1809 & 0.1840 (+1.7\%) & 0.1824 (+0.8\%) \\
+$b_r$          & 0.2554 & 0.2559 (+0.2\%) & 0.2577 (+0.9\%) \\
+$\rho_z$       & 0.5026 & 0.5105 (+1.6\%) & 0.5078 (+1.0\%) \\
+$\varphi_b$    & 0.0938 & 0.0926 (-1.3\%) & 0.0947 (+1.0\%) \\
+\midrule
+$\sigma_a$     & 0.0195 & \textbf{0.0196 (+0.5\%)} & \textbf{0.0177 (-9.2\%)} \\
+$\sigma_z$     & 0.0241 & 0.0243 (+0.8\%) & 0.0243 (+0.8\%) \\
+$\sigma_{va}$  & 0.0463 & \textbf{0.0462 (-0.2\%)} & \textbf{0.0490 (+5.8\%)} \\
+$\sigma_{xa}$  & 0.0421 & 0.0432 (+2.6\%) & 0.0429 (+1.9\%) \\
+$\sigma_g$     & 0.0295 & 0.0300 (+1.7\%) & 0.0301 (+2.3\%) \\
+$\sigma_r$     & 0.0180 & 0.0183 (+1.7\%) & 0.0183 (+2.0\%) \\
+$\sigma_\tau$  & 0.0315 & 0.0307 (-2.5\%) & 0.0320 (+1.7\%) \\
+$\sigma_L$     & 0.0636 & 0.0629 (-1.1\%) & 0.0647 (+1.7\%) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$\kappa$ is not a free lunch, but it also does not move the qualitative
+conclusion, and not always in the direction one might expect. Most
+structural parameters are comparably close to OccBin's mode under either
+$\kappa$ (within roughly 1--3\%). The two shock standard deviations that
+were $\kappa=2{,}000$'s largest outliers, $\sigma_a$ ($-9.2\%$) and
+$\sigma_{va}$ ($+5.8\%$), are essentially resolved at $\kappa=1{,}000$
+($+0.5\%$ and $-0.2\%$), and the achieved $-\log\text{posterior}$ is
+\emph{higher} at $\kappa=1{,}000$ despite it being the cruder
+approximation of the true kink and carrying the larger steady-state
+artifact above. A plausible explanation is that the smoother transition
+at $\kappa=1{,}000$ gives the particle filter an easier, less kinked
+surface to track through the actual ZLB episodes in the data -- where
+most of the likelihood's information is -- more than offsetting the
+larger (but still small) steady-state distortion; this is offered as a
+suggestive pattern from one comparison, not a settled explanation. The
+practical conclusion is that sharpening $\kappa$ is not obviously an
+improvement, and the smooth-ZLB cross-validation above is not an artifact
+of the particular $\kappa$ chosen.
+
+\paragraph{Could the smooth-ZLB model be pushed from a mode comparison to
+a full posterior?} The seeding limitation identified above was pursued to
+see how far it could actually be taken, rather than left as a named
+caveat. Three steps were tried, in increasing order of ambition.
+
+\emph{Patching the seed.} A project-local shadow copy of
+\texttt{sequential\_importance\_particle\_filter.m} (added to the MATLAB
+path ahead of the Dynare installation, which is left untouched) replaces
+the fixed-seed reset with a fresh, monotonically-incrementing seed per
+call. This was verified to work directly: the same bit-identical-to-12-
+decimals test that first exposed the problem now returns six genuinely
+different values across six calls at identical parameters.
+
+\emph{Measuring the resulting noise.} With independent draws restored,
+repeated likelihood evaluations at the posterior mean give the estimator's
+true sampling variance: $1121$ at 5{,}000 particles, falling to $104$ at
+50{,}000, consistent with the particle filter's expected $1/N$ scaling
+(variance $\times\, N$ is roughly constant across that range, itself
+confirming the patch produces statistically sensible draws, not an
+implementation bug). The workable target for Metropolis-Hastings under a
+pseudo-marginal likelihood (Pitt, Silva, Giordani and Kohn, 2012) is
+variance $\approx 1$; reaching it by adding particles alone extrapolates
+to roughly 4.8 million particles and about 34 minutes per likelihood
+evaluation -- making even a short diagnostic chain a multi-day undertaking
+and this project's usual protocol (tens of thousands of draws per chain)
+infeasible outright. A parallel patch of \texttt{auxiliary\_particle\_%
+filter.m} (the same fixed-seed bug, same fix) found the auxiliary particle
+filter roughly 3.8 times more efficient per particle than the sequential
+importance filter tested first, which still only halves the problem
+(about 1.3 million particles, 17 minutes per evaluation) rather than
+closing it.
+
+\emph{Correlated pseudo-marginal MCMC.} Deligiannidis, Doucet and Pitt
+(2018, \emph{Journal of the Royal Statistical Society B} 80(5), 839--870)
+address exactly this: correlate the random numbers driving the particle
+filter across MH iterations (a Crank-Nicolson update,
+$U'=\rho U+\sqrt{1-\rho^2}Z$) so that the \emph{difference} between two
+log-likelihood estimates has much lower variance than two independent
+draws, even though each estimate's own variance is unchanged. Testing
+this required rewriting the particle filter to take every source of its
+randomness -- the initial particle cloud, each period's structural
+innovations, and (under this project's default systematic/kitagawa
+resampling, confirmed to need exactly one uniform draw per period) the
+resampling draw itself -- as an external input rather than calling
+\texttt{randn()}/\texttt{rand()} internally, making the filter a pure
+function of $(\theta,U)$. With that in place, correlation does help
+substantially: at 5{,}000 particles the variance of the likelihood
+\emph{difference} falls from 1620 (independent draws, $\rho=0$) to 150.8
+at $\rho=0.999$ and 56.1 at $\rho=0.99999$ -- a 30-100-fold reduction. But
+it plateaus well short of the needed $O(1\text{--}10)$: pushing $\rho$
+from $0.999$ to $0.99999$, a perturbation of the underlying randomness of
+well under 1\%, only takes variance from 150.8 to 56.1, not toward the
+target. The most likely cause is the resampling step itself: systematic
+resampling maps a single uniform to a \emph{discrete} set of particle
+indices, so even a near-identical uniform can flip which particles are
+selected near a weight tie, reintroducing a floor of effectively
+uncorrelated noise at every one of the 68 resampling events regardless of
+how close $\rho$ is to 1. The literature's fix for this specific problem
+-- a resampling scheme designed to vary smoothly in the underlying
+randomness -- is itself a substantial implementation project, not a
+further parameter adjustment, and was not attempted.
+
+\emph{Bottom line.} The smooth-ZLB/particle-filter approach was taken as
+far as is reasonable without a multi-day engineering commitment: the
+seeding bug is real, documented, and fixed in a reusable project-local
+patch; the resulting noise is precisely measured rather than assumed; and
+a genuine attempt at the standard literature fix (correlated
+pseudo-marginal MCMC) produced real, measured improvement that
+nonetheless falls short by roughly two orders of magnitude, for an
+identified and specific reason rather than an unexplained wall. The mode
+comparison in the preceding paragraphs -- not a full posterior -- remains
+the practical ceiling of what this alternative delivers at present, and
+should be read accordingly: a structural cross-validation of OccBin's
+point estimates, not an independent Bayesian estimation of this model.
 
 \subsection{Diffuse-prior re-estimation (current round)}
 \label{sec:diffuse}
@@ -574,7 +1171,7 @@ reported in this note. Two of these -- $\bar\tau$ and $\chi$ -- were
 recalibrated this round, as described in Section~1; the remainder are
 unchanged from the baseline \texttt{mmt8bOccBin3} calibration.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{lll}
@@ -933,5 +1530,304 @@ $\beta=0.9967$ was originally chosen so that the loan rate would clear a
 2\% inflation target while keeping the deposit rate above the ZLB; under
 the recalibrated $\bar\tau,\chi$ that margin remains comfortably
 positive.
+
+\section{Counterfactual Analysis: Debt and Monetary Policy in the Post-COVID Inflation Episode}
+\label{sec:counterfactual}
+
+Beyond the unconditional posterior described above, two exercises ask a
+conditional-on-the-data question: given the smoothed history implied by
+this model and the posterior mean, which shocks actually account for the
+elevated inflation observed over 2021Q2--2023Q2 (the period this note's
+abstract refers to as ``elevated inflation'')? Section~\ref{sec:cf-method}
+describes the shared methodology; Sections~\ref{sec:cf-debt} and
+\ref{sec:cf-mp} report the debt/fiscal and monetary-policy exercises,
+respectively.
+
+\subsection{Methodology: historical decomposition and shock-off counterfactuals}
+\label{sec:cf-method}
+
+Both exercises use Dynare's \texttt{calib\_smoother} command -- the Kalman
+smoother evaluated once at fixed (posterior-mean) parameters, without any
+further MCMC -- applied to the same estimation dataset
+(\texttt{fred\_data\_debt\_baa.mat}) used throughout this note, followed by
+\texttt{shock\_decomposition}. For a variable $x_t$ observed or implied by
+the model, this yields an exactly additive decomposition of its smoothed
+deviation from steady state,
+\[
+\hat x_t - \bar x = \sum_{k=1}^{15} \phi_{k,t} + \iota_t,
+\]
+where $\phi_{k,t}$ is the $k$-th shock's own contribution at $t$ (computed
+by simulating the linear state-space system with only shock $k$'s smoothed
+innovations active) and $\iota_t$ is the contribution of the smoothed
+initial condition; summing all sixteen terms reproduces $\hat x_t - \bar x$
+to numerical precision, which was verified directly. Because this
+decomposition is linear and exactly additive, a shock-off counterfactual
+does not require re-simulating the model: it is simply the actual smoothed
+path with one or more shocks' contributions subtracted,
+\[
+x_t^{\mathrm{cf}} = \bar x + \Big(\hat x_t - \bar x\Big) - \sum_{k \in \mathcal{K}} \phi_{k,t},
+\]
+for the shock set $\mathcal{K}$ being switched off.
+
+Both exercises use the \emph{linear}, non-OccBin Kalman smoother -- the
+same approximation used for this note's own Stage-1 mode-finding
+(Section~\ref{sec:twostage}) -- rather than the true OccBin piecewise-linear
+ZLB smoother, which (Section~\ref{sec:zlb-detection}) does not reach a
+fixed point for this model. This matters wherever the floor binds. The
+target window, 2021Q2--2023Q2, is \emph{not} entirely past liftoff: the
+regime path verified in Section~\ref{sec:zlb-detection} has the floor
+binding through 2022Q2 (the observed-rate episode in Section~1 ends
+2021Q4, and the linear notional-rate check 2022Q1), so roughly the first
+five of the window's nine quarters (2021Q2--2022Q2) are at or near the
+floor. In those quarters the linear smoother is infeasible by
+construction -- its policy rate averages 0.9995 (gross quarterly), below
+the floor of 1 -- and, under a true floor, $\varepsilon^r_t$ is not
+point-identified (any shock pushing the notional rate below 1 is
+consistent with the data), whereas the linear smoother picks the single
+value matching the observed rate. Section~\ref{sec:cf-zlb} therefore
+splits the window into binding and post-liftoff quarters (2022Q3--2023Q2)
+and reports both. The COVID-quarter numbers reported for contrast should
+be read with the same caveat.
+
+\subsection{Do debt-moving shocks explain the inflation spike?}
+\label{sec:cf-debt}
+
+Debt $b_t$ (and hence $bT_t$) has no exogenous shock of its own in this
+model -- it is an accumulated state, driven by the government budget
+identity (Section~1) -- so the relevant counterfactual switches off the
+two shocks that \emph{directly} enter that block, the tax-rule shock
+$\varepsilon^\tau_t$ and the government-spending shock $\varepsilon_{g,t}$
+(Table~\ref{tab:shocks}), and asks how $bT_t$ and $\pi_t$ would have
+evolved without them.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Window & Variable & Avg.\ actual dev.\ from SS & Avg.\ counterfactual dev.\ from SS \\
+\midrule
+2021Q2--2023Q2 & $\pi_t$ & 0.00302 & 0.00307 \\
+2021Q2--2023Q2 & $bT_t$ & 0.1586 & $-$0.1615 \\
+2020Q1--2020Q4 (COVID) & $\pi_t$ & $-$0.00112 & $-$0.00018 \\
+\bottomrule
+\end{tabular}
+\caption{Actual vs.\ counterfactual ($\varepsilon^\tau_t,\varepsilon_{g,t}$ shut off) average deviations from steady state. $\pi_t$ in gross quarterly units, $bT_t$ in debt/GDP ratio units.}
+\label{tab:cf-debt}
+\end{table}
+
+The debt panel confirms the experiment is doing what it should: without
+$\varepsilon^\tau_t,\varepsilon_{g,t}$, debt-to-GDP would average roughly
+32 percentage points lower over 2021Q2--2023Q2 (0.64--0.70 rather than the
+actual 1.00--1.03) -- these two shocks are indeed the model's debt-moving
+shocks. But the inflation panel shows essentially no corresponding gap
+(0.00302 actual vs.\ 0.00307 counterfactual, i.e.\ debt-related shocks
+account for about 0\% of the average inflation deviation over that
+window); the two paths are visually indistinguishable from 2021Q2 through
+2023Q2 in Figure~\ref{fig:debtcf}. The one episode where the two paths
+diverge visibly is the COVID quarters themselves (2020Q2--Q3), where the
+deficit shock's direct demand effect does move inflation (a
+$-$0.00094 average gap over 2020Q1--Q4). In this estimated model, debt
+accumulation and the 2021--2023 inflation episode are essentially
+decoupled: the debt buildup is fiscal-shock-driven as expected, but the
+subsequent inflation surge is not.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{irf_graphs/debt_counterfactual_zoom.pdf}
+\caption{Actual (smoothed) vs.\ counterfactual $\pi_t$ (top) and $bT_t$
+(bottom) with $\varepsilon^\tau_t,\varepsilon_{g,t}$ shut off, 2019Q1--2024Q4.
+Posterior mean, linear (non-OccBin) Kalman smoother.}
+\label{fig:debtcf}
+\end{figure}
+
+\subsection{Was monetary policy behind the curve?}
+\label{sec:cf-mp}
+
+The second exercise switches off only the monetary-policy shock
+$\varepsilon^r_t$ (Table~\ref{tab:shocks}) and compares the actual smoothed
+$\pi_t$ and $r^n_t$ to what the estimated policy rule alone -- with
+$\varepsilon^r_t\equiv 0$, i.e.\ $z^r_t = b_r z^r_{t-1}$ decaying from its
+initial condition rather than being perturbed each period -- would have
+produced given the rest of the smoothed system.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Window & Variable & Avg.\ actual & Avg.\ counterfactual ($\varepsilon^r_t$ shut off) \\
+\midrule
+2021Q2--2023Q2 & $\pi_t$ dev.\ from SS & 0.00302 & $-$0.00215 \\
+2021Q2--2023Q2 & $r^n_t$ level & 1.00293 & 0.99790 \\
+2020Q1--2020Q4 (COVID) & $\pi_t$ dev.\ from SS & $-$0.00112 & 0.00033 \\
+\bottomrule
+\end{tabular}
+\caption{Actual vs.\ counterfactual ($\varepsilon^r_t$ shut off) average deviations/levels. $\pi_t,r^n_t$ in gross quarterly units.}
+\label{tab:cf-mp}
+\end{table}
+
+Without $\varepsilon^r_t$, inflation over 2021Q2--2023Q2 would have
+averaged \emph{below} steady state ($-0.00215$) instead of above it
+($+0.00302$ actual) -- a 0.00517 average gap, matching the $\varepsilon^r_t$
+row of the shock decomposition exactly, since the two constructions are
+algebraically equivalent. The policy-rate counterfactual shows the actual
+rate running about 2 percentage points (annualized) above what the
+estimated rule alone would have set. Pulling the smoothed shock series
+directly confirms the sign and persistence of this: $\varepsilon^r_t$ is
+negative in every quarter from 2021Q2 through 2023Q2 (mean $-0.0094$),
+i.e.\ the smoother reads monetary policy as systematically looser than the
+estimated rule ($b_\pi=3.474$) would prescribe given realized $\pi_t,y_t$
+throughout the episode. This is the mirror image of the COVID quarters,
+where $\varepsilon^r_t$ is mostly positive (mean $+0.0018$ over
+2020Q1--2020Q4) and the counterfactual sign flips accordingly (inflation
+would have been \emph{higher}, not lower, without the shock). Both
+$\pi_t$ and $r^n_t$ move together with the shock's sign here -- a negative
+$\varepsilon^r_t$ pulls the actual policy rate below, and actual inflation
+above, their respective shock-off counterfactuals -- reflecting the
+shock's net effect once propagated through the full general-equilibrium
+system (including the banking block's rate spreads), not merely its
+direct, partial-equilibrium effect on the policy rule alone.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{irf_graphs/mp_counterfactual_zoom.pdf}
+\caption{Actual (smoothed) vs.\ counterfactual $\pi_t$ (top) and $r^n_t$
+(bottom, actual vs.\ what the estimated rule alone would set) with
+$\varepsilon^r_t$ shut off, 2019Q1--2024Q4. Posterior mean, linear
+(non-OccBin) Kalman smoother.}
+\label{fig:mpcf}
+\end{figure}
+
+\subsection{Sensitivity to the ZLB quarters}
+\label{sec:cf-zlb}
+
+Because contributions are linear in the smoothed innovations, each
+shock's average contribution over 2021Q2--2023Q2 can be split exactly by
+\emph{when} the underlying innovations were realized (simulating each
+shock once per block of innovation dates; the pieces sum to the
+decomposition of Section~\ref{sec:cf-method} to five decimals). An
+earlier version of this table used three blocks, treating 2020Q1--2021Q1
+as the ZLB quarters and everything from 2021Q2 on as ``in-window''; that
+definition put the binding quarters 2021Q2--2022Q2 inside the window and
+so could not test contamination from them. The split below separates
+them:
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}llccccc@{}}
+\toprule
+Variable & Shock & Pre-2020 & 2020Q1--21Q1 & 2021Q2--22Q2 & 2022Q3+ & Total \\
+ & & & & (binding) & (post-liftoff) & \\
+\midrule
+$\pi_t$ & $\varepsilon^r_t$ & $-$0.00000 & 0.00025 & 0.00350 & 0.00142 & 0.00517 \\
+$\pi_t$ & $\varepsilon^\tau_t$ & $-$0.00000 & 0.00000 & 0.00000 & 0.00000 & 0.00000 \\
+$\pi_t$ & $\varepsilon_{g,t}$ & 0.00000 & 0.00003 & $-$0.00002 & $-$0.00007 & $-$0.00006 \\
+$bT_t$ & $\varepsilon_{g,t}$ & 0.20564 & 0.14128 & 0.00230 & 0.00267 & 0.35189 \\
+$bT_t$ & $\varepsilon^\tau_t$ & $-$0.01347 & 0.00490 & $-$0.02266 & $-$0.00055 & $-$0.03178 \\
+\bottomrule
+\end{tabular}
+\caption{Average contribution over 2021Q2--2023Q2, split by the dates of
+the innovations generating it. Columns 3--6 nest the earlier three-block
+split (old ``in-window'' = columns 5 + 6).}
+\label{tab:cf-zlb}
+\end{table}
+
+Of the monetary-policy shock's 0.00517 contribution to inflation, about
+68\% (0.00350) comes from innovations realized in the binding quarters
+2021Q2--2022Q2, 27\% (0.00142) from post-liftoff innovations, and only 5\%
+(0.00025) from 2020Q1--2021Q1. The earlier conclusion that the result
+``does not depend on the smoothed shocks of the ZLB quarters'' therefore
+held only for the narrower 2020Q1--2021Q1 definition: the window's
+largest contributions \emph{do} come from quarters where the floor
+binds. The fiscal shocks' contribution to inflation remains essentially
+zero from every origin, and the debt contribution is still dominated by
+pre-window (chiefly COVID-era) deficits, so the fiscal conclusion is
+unaffected.
+
+The sharper question is whether the monetary-policy result survives on the
+post-liftoff quarters alone, where the linear smoother is not infeasible.
+Table~\ref{tab:cf-sub} reports averages by sub-window for this note's
+baseline posterior mean and for the posterior mean of the later production
+round in which $\sigma_{me,r^n}$ is fixed at 0.0015 rather than estimated
+(the round whose regime path recovers the true ZLB dates;
+Section~\ref{sec:zlb-detection}).
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}llccccc@{}}
+\toprule
+Round & Window & Actual $\pi$ dev. & $\varepsilon^r$ contrib. & Cf.\ ($\varepsilon^r$ off) & Mean $\varepsilon^r$ & Mean $r^n$ \\
+\midrule
+Baseline & 2021Q2--2023Q2 & 0.00302 & 0.00517 & $-$0.00215 & $-$0.0094 & 1.0029 \\
+Baseline & 2021Q2--2022Q2 (binding) & 0.00292 & 0.00581 & $-$0.00289 & $-$0.0115 & 0.9995 \\
+Baseline & 2022Q3--2023Q2 (post-liftoff) & 0.00315 & 0.00438 & $-$0.00123 & $-$0.0068 & 1.0072 \\
+\midrule
+$\sigma_{me,r^n}$ fixed & 2021Q2--2023Q2 & 0.00290 & 0.00512 & $-$0.00221 & $-$0.0089 & 1.0030 \\
+$\sigma_{me,r^n}$ fixed & 2021Q2--2022Q2 (binding) & 0.00286 & 0.00593 & $-$0.00307 & $-$0.0113 & 0.9994 \\
+$\sigma_{me,r^n}$ fixed & 2022Q3--2023Q2 (post-liftoff) & 0.00295 & 0.00410 & $-$0.00115 & $-$0.0058 & 1.0074 \\
+\bottomrule
+\end{tabular}
+\caption{Monetary-policy counterfactual by sub-window, linear smoother at
+the posterior mean of each round. $\pi$ and $r^n$ in gross quarterly
+units; $\varepsilon^r$ contribution = actual minus counterfactual
+deviation (rows may differ by rounding).}
+\label{tab:cf-sub}
+\end{table}
+
+It does. On the post-liftoff quarters alone, shutting off
+$\varepsilon^r_t$ still moves average inflation from $+0.00315$ to
+$-0.00123$ (baseline) and from $+0.00295$ to $-0.00115$ (fixed-$\sigma_{me,r^n}$
+round): the shock's contribution (0.00438, 0.00410) exceeds the entire
+actual deviation in both rounds, and the smoothed shock remains negative
+(mean $-0.0068$, $-0.0058$). The binding-quarter figures are larger
+(0.00581, 0.00593; mean shock about $-0.0115$) but are the ones the linear
+smoother cannot be trusted on: the smoothed policy rate there averages
+0.9995, below the floor. They describe what the linear model needs in
+order to match the observed rate, not an estimate of what policy
+contributed.
+
+Re-running the whole of Sections~\ref{sec:cf-debt}--\ref{sec:cf-mp} at the
+$\sigma_{me,r^n}$-fixed posterior mean changes the headline numbers
+little: over 2021Q2--2023Q2, inflation averages 0.00290 against a
+debt-shocks-off counterfactual of 0.00295 (baseline: 0.00302 against
+0.00307), while debt-to-GDP would average about 27 points lower without
+$\varepsilon^\tau_t,\varepsilon_{g,t}$ (baseline: about 32); the
+$\varepsilon^r_t$-off counterfactual is $-0.00221$ (baseline:
+$-0.00215$). The policy-rule coefficients behind these differences are
+also close across likelihood methods: Section~\ref{sec:zlb-detection}
+reports that an independent smooth-floor, particle-filter mode search
+lands within roughly 1--4\% of OccBin's mode on every structural
+parameter, so the counterfactuals are not sensitive to this choice. That
+cross-validation concerns parameters, not the smoother, and does not
+supply a ZLB-consistent smoothed shock path.
+
+\subsection{Summary}
+
+Taken together, these two exercises point to monetary policy, not fiscal
+policy or debt accumulation, as the model's own account of what drove the
+2021Q2--2023Q2 inflation episode: the debt-moving shocks
+($\varepsilon^\tau_t,\varepsilon_{g,t}$) explain essentially none of the
+average inflation deviation over that window despite clearly driving the
+contemporaneous debt buildup, while the monetary-policy shock
+($\varepsilon^r_t$) alone accounts for more than the entire average
+deviation (0.00517 against an actual deviation of 0.00302 -- other shocks
+net out mildly negative over the same window). The monetary-policy result
+survives restriction to the post-liftoff quarters 2022Q3--2023Q2
+(contribution 0.00438 against an actual deviation of 0.00315) and
+re-estimation with $\sigma_{me,r^n}$ fixed (0.00410 against 0.00295), but
+roughly two-thirds of the full-window contribution comes from innovations
+in the binding quarters 2021Q2--2022Q2, where the linear smoother is
+infeasible (Section~\ref{sec:cf-zlb}); the full-window magnitude should
+not be read as precise. Both findings are conditional on the
+linear-smoother approximation (Section~\ref{sec:cf-method}) and on the
+posterior mean; they are not restated as unconditional posterior results
+and would need to be rechecked against a full OccBin-consistent smoother
+if and when the fixed-point issue of Section~\ref{sec:zlb-detection} is
+resolved. The smooth-floor cross-validation reported there supports the
+parameters behind these counterfactuals but does not remove that
+dependence.
 
 \end{document}

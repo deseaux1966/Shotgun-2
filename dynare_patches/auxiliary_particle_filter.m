@@ -1,0 +1,145 @@
+function [LIK,lik] = auxiliary_particle_filter(ReducedForm,Y,start,ParticleOptions,ThreadsOptions, options_, M_)
+% [LIK,lik] = auxiliary_particle_filter(ReducedForm,Y,start,ParticleOptions,ThreadsOptions, options_, M_)
+% Evaluates the likelihood of a nonlinear model with the auxiliary particle filter
+% allowing eventually resampling.
+% INPUTS
+%  - ReducedForm            [structure] decision rules
+%  - Y                      [double]    dataset
+%  - start                  [integer]   first observation for likelihood evaluation
+%  - ParticleOptions        [structure] filter options
+%  - ThreadsOptions         [structure] options for threading of mex files
+%  - options_               [structure] describing the options
+%  - M_                     [structure] describing the model
+%
+% OUTPUTS
+% - LIK                [double]    scalar, likelihood
+% - lik                [double]    (T-s+1)×1 vector, density of observations in each period.
+
+% Copyright © 2011-2026 Dynare Team
+%
+% This file is part of Dynare.
+%
+% Dynare is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% Dynare is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Dynare.  If not, see <https://www.gnu.org/licenses/>.
+%
+% ---------------------------------------------------------------------
+% PROJECT-LOCAL PATCH (Shotgun-2, mmt8bOccBin3_covid_bT_baa_softzlb*):
+% same fixed-seed issue and fix as sequential_importance_particle_filter.m
+% in this same directory -- see that file's header for the full
+% explanation. Stock Dynare resets to seed=0 on every call
+% (set_dynare_seed_local_options([],false,'default')); patched below to
+% seed a fresh mt19937ar stream from a persistent, monotonically-
+% incrementing call counter instead, restoring independence across calls
+% for valid pseudo-marginal MCMC (Andrieu & Roberts, 2009).
+% ---------------------------------------------------------------------
+
+% Set default
+if isempty(start)
+    start = 1;
+end
+if ParticleOptions.resampling.method.smooth
+    error('auxiliary_particle_filter: resampling_method=smooth is not supported.')
+end
+% Get perturbation order
+mf0 = ReducedForm.mf0;
+mf1 = ReducedForm.mf1;
+sample_size = size(Y,2);
+number_of_state_variables = length(mf0);
+number_of_observed_variables = length(mf1);
+number_of_structural_innovations = length(ReducedForm.Q);
+number_of_particles = ParticleOptions.number_of_particles;
+
+% Get initial condition for the state vector.
+StateVectorVarianceSquareRoot = chol(ReducedForm.StateVectorVariance)';
+state_variance_rank = size(StateVectorVarianceSquareRoot,2);
+Q_lower_triangular_cholesky = chol(ReducedForm.Q)';
+
+% PATCHED: fresh seed per call (see header note above), not a fixed default.
+persistent apf_patch_call_counter
+if isempty(apf_patch_call_counter)
+    apf_patch_call_counter = 0;
+end
+apf_patch_call_counter = apf_patch_call_counter + 1;
+set_dynare_seed_local_options([],false,'mt19937ar',apf_patch_call_counter);
+
+%initialize output
+lik  = NaN(sample_size,1);
+LIK  = NaN;
+if isempty(ReducedForm.H)
+    ReducedForm.H = 0;
+end
+% filter out singular measurement error case
+if rcond(ReducedForm.H) < 1e-12
+    LIK = NaN;
+    return
+end
+
+% Initialization of the likelihood.
+const_lik = log(2*pi)*number_of_observed_variables+log(det(ReducedForm.H));
+
+% Initialization of the weights across particles.
+weights = ones(1,number_of_particles)/number_of_particles ;
+StateVectors = bsxfun(@plus,StateVectorVarianceSquareRoot*randn(state_variance_rank,number_of_particles),ReducedForm.StateVectorMean);
+if ParticleOptions.pruning && ~(options_.order==1)
+    if options_.order == 2
+        StateVectors_ = StateVectors;
+        mf0_ = mf0;
+    elseif options_.order == 3
+        StateVectors_ = repmat(StateVectors,3,1);
+        mf0_ = repmat(mf0,1,3);
+        mask2 = number_of_state_variables+1:2*number_of_state_variables;
+        mask3 = 2*number_of_state_variables+1:3*number_of_state_variables;
+        mf0_(mask2) = mf0_(mask2)+size(ghx,1);
+        mf0_(mask3) = mf0_(mask3)+2*size(ghx,1);
+    else
+        error('Pruning is not available for orders > 3');
+    end
+else
+    StateVectors_=[];
+    mf0_ = mf0;
+end
+
+for t=1:sample_size
+    tmp=iterate_law_of_motion(StateVectors,zeros(number_of_structural_innovations,number_of_particles),ReducedForm,M_,options_,ReducedForm.use_k_order_solver,ParticleOptions.pruning,StateVectors_);
+    PredictionError = bsxfun(@minus,Y(:,t),tmp(mf1,:));
+    z = sum(PredictionError.*(ReducedForm.H\PredictionError),1) ;
+    ddl = 3 ;
+    tau_tilde = weights.*(exp(gammaln((ddl + 1) / 2) - gammaln(ddl/2))./(sqrt(ddl*pi).*(1 + (z.^2)./ddl).^((ddl + 1)/2))+1e-99) ;
+    tau_tilde = tau_tilde/sum(tau_tilde) ;
+    indx = resample(0,tau_tilde',ParticleOptions);
+    weights_stage_1 = weights(indx)./tau_tilde(indx) ;
+    epsilon = Q_lower_triangular_cholesky*randn(number_of_structural_innovations,number_of_particles);
+    if ParticleOptions.pruning
+        [tmp, tmp_]=iterate_law_of_motion(StateVectors(:,indx),epsilon,ReducedForm,M_,options_,ReducedForm.use_k_order_solver,ParticleOptions.pruning,StateVectors_(:,indx));
+        StateVectors_ = tmp_(mf0_,:);
+    else
+        [tmp]=iterate_law_of_motion(StateVectors(:,indx),epsilon,ReducedForm,M_,options_,ReducedForm.use_k_order_solver,ParticleOptions.pruning);
+    end
+    StateVectors = tmp(mf0,:);
+    PredictionError = bsxfun(@minus,Y(:,t),tmp(mf1,:));
+    weights_stage_2 = weights_stage_1.*(exp(-.5*(const_lik+sum(PredictionError.*(ReducedForm.H\PredictionError),1))) + 1e-99) ;
+    lik(t) = log(mean(weights_stage_2)) ;
+    weights = weights_stage_2/sum(weights_stage_2);
+    if (ParticleOptions.resampling.status.generic && neff(weights)<ParticleOptions.resampling.threshold*sample_size) || ParticleOptions.resampling.status.systematic
+        if ParticleOptions.pruning
+            temp = resample([StateVectors' StateVectors_'],weights',ParticleOptions);
+            StateVectors = temp(:,1:number_of_state_variables)';
+            StateVectors_ = temp(:,number_of_state_variables+1:end)';
+        else
+            StateVectors = resample(StateVectors',weights',ParticleOptions)';
+        end
+        weights = ones(1,number_of_particles)/number_of_particles;
+    end
+end
+
+LIK = -sum(lik(start:end));
