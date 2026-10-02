@@ -1,0 +1,243 @@
+Starting Dynare (version 7.2).
+Calling Dynare with arguments: none
+Starting preprocessing of the model file ... 
+Found 33 equation(s). 
+Evaluating expressions... 
+Computing static model derivatives (order 1). 
+Normalizing the static model... 
+Finding the optimal block decomposition of the static model... 
+9 block(s) found: 
+  7 recursive block(s) and 2 simultaneous block(s). 
+  the largest simultaneous block has 16 equation(s) 
+                                 and 16 feedback variable(s). 
+Computing dynamic model derivatives (order 1). 
+Normalizing the dynamic model... 
+Finding the optimal block decomposition of the dynamic model... 
+4 block(s) found: 
+  2 recursive block(s) and 2 simultaneous block(s). 
+  the largest simultaneous block has 17 equation(s) 
+                                 and 15 feedback variable(s). 
+Preprocessing completed. 
+Preprocessing time: 0h00m01s.
+
+STEADY-STATE RESULTS:
+
+y           		 0.902139
+c           		 0.702139
+d           		 36.7956
+n           		 9.34383
+pig         		 1.01681
+rl          		 1.02018
+rd          		 1.0122
+h           		 0.847065
+hg          		 0.693953
+hd          		 0.14844
+hn          		 0.00467191
+hs          		 0.437137
+mu          		 0.873077
+w           		 1.08333
+rn          		 1.01004
+rn_notional 		 1.01004
+m           		 9.49764
+at          		 1
+zt          		 1.3
+vat         		 2.5035
+xat         		 5.2528
+gt          		 0.2
+tau         		 0.14
+b           		 0.99993
+bT          		 0.833275
+zr          		 0
+y_obs       		 0
+d_obs       		 0
+pig_obs     		 0
+rl_obs      		 0
+rn_obs      		 0
+taut_obs    		 0
+bT_obs      		 0
+
+EIGENVALUES:
+         Modulus             Real        Imaginary
+               0                0                0
+               0                0                0
+             0.3              0.3                0
+          0.4441           0.4441                0
+          0.5147           0.5147                0
+            0.65             0.65                0
+            0.95             0.95                0
+            0.95             0.95                0
+          0.9746           0.9746                0
+           1.035            1.035                0
+           1.052            1.052                0
+       3.766e+17       -3.766e+17                0
+       5.546e+17       -5.546e+17                0
+
+There are 4 eigenvalue(s) larger than 1 in modulus for 4 forward-looking variable(s).
+The order and rank conditions are verified.
+
+
+Prior distribution for parameter phib_val has unbounded density!
+
+Initial value of the log posterior (or likelihood): 1278.8143
+
+OPTIMIZATION PROBLEM!
+ (minus) the Hessian matrix at the "mode" is not positive definite!
+=> variance of the estimated parameters are not positive.
+You should try to change the initial values of the parameters using
+the estimated_params_init block, or use another optimization routine.
+[Warning: The results below are most likely wrong!] 
+[> In check_hessian_at_the_mode (line 68)
+In dynare_estimation_1 (line 331)
+In dynare_estimation (line 105)
+In mmt8bOccBin3_covid_bT_baa_rnfixed_diag2.driver (line 1220)
+In dynare (line 300)
+In run_rnfixed_diag2 (line 6)
+In run (line 112)] 
+[Warning: Matrix is singular, close to singular or badly scaled. Results may be inaccurate. RCOND = NaN.] 
+[> In dynare_estimation_1 (line 360)
+In dynare_estimation (line 105)
+In mmt8bOccBin3_covid_bT_baa_rnfixed_diag2.driver (line 1220)
+In dynare (line 300)
+In run_rnfixed_diag2 (line 6)
+In run (line 112)
+] 
+
+RESULTS FROM POSTERIOR ESTIMATION
+parameters
+                  prior mean     mode    s.d.  prior pstdev
+
+va                    2.5000   2.8899     NaN   gamm 0.7500 
+eta                   1.5300   1.1363     NaN   gamm 0.4000 
+bpi                   1.0000   3.6460     NaN   gamm 1.0000 
+by                    1.0000   0.0901  0.0001   gamm 0.7000 
+ali                   0.4900   0.1831     NaN   beta 0.1000 
+br                    0.3600   0.2710  0.0002   beta 0.1000 
+rhoz                  0.4500   0.4431  0.0003   beta 0.1000 
+phib_val              0.0500   0.0689  0.0001   beta 0.0500 
+
+standard deviation of shocks
+                  prior mean     mode    s.d.  prior pstdev
+
+epsa                  0.0500   0.0172     NaN   invg 0.0250 
+epsz                  0.0500   0.0226     NaN   invg 0.0250 
+epsva                 0.0500   0.0391     NaN   invg 0.0250 
+epsxa                 0.0500   0.0362     NaN   invg 0.0250 
+epsg                  0.0500   0.0300     NaN   invg 0.0250 
+epsr                  0.0500   0.0256     NaN   invg 0.0250 
+epstau                0.0500   0.0306     NaN   invg 0.0250 
+epsL                  0.1500   0.0689     NaN   invg 0.0750 
+eps_y_me              0.0500   0.0206     NaN   invg 0.0250 
+eps_d_me              0.0500   0.0184     NaN   invg 0.0250 
+eps_pig_me            0.0500   0.0135     NaN   invg 0.0250 
+eps_rl_me             0.0500   0.0107  0.0001   invg 0.0250 
+eps_tau_me            0.0500   0.0197     NaN   invg 0.0250 
+eps_bT_me             0.0500   0.0221     NaN   invg 0.0250 
+
+
+Log data density [Laplace approximation] is NaN.
+
+Estimation::mcmc: Multiple chains mode.
+Estimation::mcmc: Searching for initial values...
+Estimation::mcmc: Initial values found!
+
+Estimation::mcmc: Write details about the MCMC... Ok!
+Estimation::mcmc: Details about the MCMC are available in mmt8bOccBin3_covid_bT_baa_rnfixed_diag2/metropolis\mmt8bOccBin3_covid_bT_baa_rnfixed_diag2_mh_history_0.mat
+
+[Warning: Parallel Computing Toolbox is not installed. Falling back to serial.] 
+[> In setup_parallel_execution (line 130)
+In posterior_sampler_core (line 119)
+In posterior_sampler (line 126)
+In dynare_estimation_1 (line 457)
+In dynare_estimation (line 105)
+In mmt8bOccBin3_covid_bT_baa_rnfixed_diag2.driver (line 1220)
+In dynare (line 300)
+In run_rnfixed_diag2 (line 6)
+In run (line 112)] 
+
+Estimation::mcmc: Number of mh files: 1 per block.
+Estimation::mcmc: Total number of generated files: 2.
+Estimation::mcmc: Total number of iterations: 800.
+Estimation::mcmc: Current acceptance ratio per chain:
+                                                       Chain  1: 19.875%
+                                                       Chain  2: 19.5%
+Estimation::mcmc: Total number of MH draws per chain: 800.
+Estimation::mcmc: Total number of generated MH files: 1.
+Estimation::mcmc: I'll use mh-files 1 to 1.
+Estimation::mcmc: In MH-file number 1 I'll start at line 401.
+Estimation::mcmc: Finally I keep 400 draws per chain.
+
+
+
+MCMC Inefficiency factors per block
+Parameter           Block 1     Block 2
+SE_epsa              60.157      40.452
+SE_epsz              62.888      14.148
+SE_epsva             55.767      49.045
+SE_epsxa             65.249      29.173
+SE_epsg              62.688      86.799
+SE_epsr              46.619      77.363
+SE_epstau            42.261      40.430
+SE_epsL              37.180      53.371
+SE_eps_y_me          56.423      72.655
+SE_eps_d_me          59.168      78.418
+SE_eps_pig_me        59.011      28.154
+SE_eps_rl_me         38.223      29.896
+SE_eps_tau_me        72.000      71.344
+SE_eps_bT_me         42.683      22.784
+va                   63.782      52.042
+eta                  81.712      60.978
+bpi                  68.970      62.134
+by                   46.816      14.184
+ali                  23.470      62.368
+br                   71.420      48.858
+rhoz                 87.317      36.071
+phib_val             92.323      62.794
+
+[Warning: MCMC convergence diagnostics are not computed because the total number of iterations is not bigger than 2000!] 
+[> In mcmc_diagnostics (line 111)
+In dynare_estimation_1 (line 478)
+In dynare_estimation (line 105)
+In mmt8bOccBin3_covid_bT_baa_rnfixed_diag2.driver (line 1220)
+In dynare (line 300)
+In run_rnfixed_diag2 (line 6)
+In run (line 112)] 
+marginal density: I'm computing the posterior mean and covariance...  Done!
+marginal density: I'm computing the posterior log marginal density (modified harmonic mean)... Done!
+
+
+ESTIMATION RESULTS
+
+Log data density (Modified Harmonic Mean) is 1161.209697.
+parameters
+                    prior mean   post. mean        90% HPD interval    prior       pstdev
+
+va                       2.500       2.7733      2.7359      2.8000     gamm       0.7500
+eta                      1.530       1.1307      1.0957      1.1642     gamm       0.4000
+bpi                      1.000       3.6369      3.5517      3.7189     gamm       1.0000
+by                       1.000       0.1058      0.0948      0.1211     gamm       0.7000
+ali                      0.490       0.1818      0.1758      0.1868     beta       0.1000
+br                       0.360       0.2791      0.2742      0.2816     beta       0.1000
+rhoz                     0.450       0.4407      0.4232      0.4582     beta       0.1000
+phib_val                 0.050       0.0777      0.0719      0.0842     beta       0.0500
+
+standard deviation of shocks
+                    prior mean   post. mean        90% HPD interval    prior       pstdev
+
+epsa                     0.050       0.0164      0.0158      0.0173     invg       0.0250
+epsz                     0.050       0.0223      0.0208      0.0237     invg       0.0250
+epsva                    0.050       0.0373      0.0329      0.0417     invg       0.0250
+epsxa                    0.050       0.0369      0.0340      0.0402     invg       0.0250
+epsg                     0.050       0.0305      0.0295      0.0322     invg       0.0250
+epsr                     0.050       0.0251      0.0223      0.0283     invg       0.0250
+epstau                   0.050       0.0331      0.0293      0.0367     invg       0.0250
+epsL                     0.150       0.0662      0.0575      0.0750     invg       0.0750
+eps_y_me                 0.050       0.0197      0.0176      0.0220     invg       0.0250
+eps_d_me                 0.050       0.0208      0.0190      0.0223     invg       0.0250
+eps_pig_me               0.050       0.0132      0.0126      0.0137     invg       0.0250
+eps_rl_me                0.050       0.0110      0.0102      0.0121     invg       0.0250
+eps_tau_me               0.050       0.0210      0.0198      0.0224     invg       0.0250
+eps_bT_me                0.050       0.0231      0.0222      0.0238     invg       0.0250
+Total computing time : 1h08m33s
+Note: warning(s) encountered in MATLAB/Octave code
+
+DIAGNOSTIC RUN FINISHED in 68.7 minutes

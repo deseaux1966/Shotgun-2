@@ -1,0 +1,321 @@
+Starting Dynare (version 7.2).
+Calling Dynare with arguments: none
+Starting preprocessing of the model file ... 
+Found 33 equation(s). 
+Evaluating expressions... 
+Computing static model derivatives (order 1). 
+Normalizing the static model... 
+Finding the optimal block decomposition of the static model... 
+9 block(s) found: 
+  7 recursive block(s) and 2 simultaneous block(s). 
+  the largest simultaneous block has 16 equation(s) 
+                                 and 16 feedback variable(s). 
+Computing dynamic model derivatives (order 1). 
+Normalizing the dynamic model... 
+Finding the optimal block decomposition of the dynamic model... 
+4 block(s) found: 
+  2 recursive block(s) and 2 simultaneous block(s). 
+  the largest simultaneous block has 17 equation(s) 
+                                 and 15 feedback variable(s). 
+Preprocessing completed. 
+Preprocessing time: 0h00m00s.
+
+STEADY-STATE RESULTS:
+
+y           		 0.902139
+c           		 0.702139
+d           		 36.7956
+n           		 9.34383
+pig         		 1.01681
+rl          		 1.02018
+rd          		 1.0122
+h           		 0.847065
+hg          		 0.693953
+hd          		 0.14844
+hn          		 0.00467191
+hs          		 0.437137
+mu          		 0.873077
+w           		 1.08333
+rn          		 1.01004
+rn_notional 		 1.01004
+m           		 9.49764
+at          		 1
+zt          		 1.3
+vat         		 2.5035
+xat         		 5.2528
+gt          		 0.2
+tau         		 0.14
+b           		 0.99993
+bT          		 0.833275
+zr          		 0
+y_obs       		 0
+d_obs       		 0
+pig_obs     		 0
+rl_obs      		 0
+rn_obs      		 0
+taut_obs    		 0
+bT_obs      		 0
+
+EIGENVALUES:
+         Modulus             Real        Imaginary
+               0                0                0
+               0                0                0
+             0.3              0.3                0
+          0.4441           0.4441                0
+          0.5147           0.5147                0
+            0.65             0.65                0
+            0.95             0.95                0
+            0.95             0.95                0
+          0.9746           0.9746                0
+           1.035            1.035                0
+           1.052            1.052                0
+       3.766e+17       -3.766e+17                0
+       5.546e+17       -5.546e+17                0
+
+There are 4 eigenvalue(s) larger than 1 in modulus for 4 forward-looking variable(s).
+The order and rank conditions are verified.
+
+
+Prior distribution for parameter phib_val has unbounded density!
+
+Initial value of the log posterior (or likelihood): 1278.8143
+
+OPTIMIZATION PROBLEM!
+ (minus) the Hessian matrix at the "mode" is not positive definite!
+=> variance of the estimated parameters are not positive.
+You should try to change the initial values of the parameters using
+the estimated_params_init block, or use another optimization routine.
+[Warning: The results below are most likely wrong!] 
+[> In check_hessian_at_the_mode (line 68)
+In dynare_estimation_1 (line 331)
+In dynare_estimation (line 105)
+In mmt8bOccBin3_covid_bT_baa_rnfixed_diag3.driver (line 1220)
+In dynare (line 300)
+In run_rnfixed_diag3 (line 6)
+In run (line 112)] 
+[Warning: Matrix is singular, close to singular or badly scaled. Results may be inaccurate. RCOND = NaN.] 
+[> In dynare_estimation_1 (line 360)
+In dynare_estimation (line 105)
+In mmt8bOccBin3_covid_bT_baa_rnfixed_diag3.driver (line 1220)
+In dynare (line 300)
+In run_rnfixed_diag3 (line 6)
+In run (line 112)
+] 
+
+RESULTS FROM POSTERIOR ESTIMATION
+parameters
+                  prior mean     mode    s.d.  prior pstdev
+
+va                    2.5000   2.8899     NaN   gamm 0.7500 
+eta                   1.5300   1.1363     NaN   gamm 0.4000 
+bpi                   1.0000   3.6460     NaN   gamm 1.0000 
+by                    1.0000   0.0901  0.0001   gamm 0.7000 
+ali                   0.4900   0.1831     NaN   beta 0.1000 
+br                    0.3600   0.2710  0.0002   beta 0.1000 
+rhoz                  0.4500   0.4431  0.0003   beta 0.1000 
+phib_val              0.0500   0.0689  0.0001   beta 0.0500 
+
+standard deviation of shocks
+                  prior mean     mode    s.d.  prior pstdev
+
+epsa                  0.0500   0.0172     NaN   invg 0.0250 
+epsz                  0.0500   0.0226     NaN   invg 0.0250 
+epsva                 0.0500   0.0391     NaN   invg 0.0250 
+epsxa                 0.0500   0.0362     NaN   invg 0.0250 
+epsg                  0.0500   0.0300     NaN   invg 0.0250 
+epsr                  0.0500   0.0256     NaN   invg 0.0250 
+epstau                0.0500   0.0306     NaN   invg 0.0250 
+epsL                  0.1500   0.0689     NaN   invg 0.0750 
+eps_y_me              0.0500   0.0206     NaN   invg 0.0250 
+eps_d_me              0.0500   0.0184     NaN   invg 0.0250 
+eps_pig_me            0.0500   0.0135     NaN   invg 0.0250 
+eps_rl_me             0.0500   0.0107  0.0001   invg 0.0250 
+eps_tau_me            0.0500   0.0197     NaN   invg 0.0250 
+eps_bT_me             0.0500   0.0221     NaN   invg 0.0250 
+
+
+Log data density [Laplace approximation] is NaN.
+
+Estimation::mcmc: Multiple chains mode.
+Estimation::mcmc: Searching for initial values...
+Estimation::mcmc: Initial values found!
+
+Estimation::mcmc: Write details about the MCMC... Ok!
+Estimation::mcmc: Details about the MCMC are available in mmt8bOccBin3_covid_bT_baa_rnfixed_diag3/metropolis\mmt8bOccBin3_covid_bT_baa_rnfixed_diag3_mh_history_0.mat
+
+[Warning: Parallel Computing Toolbox is not installed. Falling back to serial.] 
+[> In setup_parallel_execution (line 130)
+In posterior_sampler_core (line 119)
+In posterior_sampler (line 126)
+In dynare_estimation_1 (line 457)
+In dynare_estimation (line 105)
+In mmt8bOccBin3_covid_bT_baa_rnfixed_diag3.driver (line 1220)
+In dynare (line 300)
+In run_rnfixed_diag3 (line 6)
+In run (line 112)] 
+
+Estimation::mcmc: Number of mh files: 1 per block.
+Estimation::mcmc: Total number of generated files: 2.
+Estimation::mcmc: Total number of iterations: 3000.
+Estimation::mcmc: Current acceptance ratio per chain:
+                                                       Chain  1: 19.1667%
+                                                       Chain  2: 21.8333%
+Estimation::mcmc: Total number of MH draws per chain: 3000.
+Estimation::mcmc: Total number of generated MH files: 1.
+Estimation::mcmc: I'll use mh-files 1 to 1.
+Estimation::mcmc: In MH-file number 1 I'll start at line 1501.
+Estimation::mcmc: Finally I keep 1500 draws per chain.
+
+
+
+MCMC Inefficiency factors per block
+Parameter           Block 1     Block 2
+SE_epsa             277.327     320.888
+SE_epsz             348.773     193.469
+SE_epsva             90.650     152.846
+SE_epsxa            182.044     338.720
+SE_epsg             234.300     130.783
+SE_epsr             296.137     220.401
+SE_epstau           282.787     356.761
+SE_epsL             313.312     280.457
+SE_eps_y_me         242.669     195.799
+SE_eps_d_me         250.286     166.963
+SE_eps_pig_me       135.585     299.769
+SE_eps_rl_me         45.140      99.837
+SE_eps_tau_me       269.299     367.245
+SE_eps_bT_me        321.517     226.439
+va                  338.969     319.579
+eta                 304.270     185.092
+bpi                 288.892     252.671
+by                  141.633     128.861
+ali                 123.989     264.319
+br                  244.527     149.450
+rhoz                188.095     266.673
+phib_val            354.299     258.052
+
+
+
+Convergence diagnostics results for chain 1.
+
+Geweke (1992) Convergence Tests, based on means of draws 1500 to 1800 vs 2250 to 3000 for chain 1.
+p-values are for Chi2-test for equality of means.
+Parameter             Post. Mean        Post. Std   p-val No Taper   p-val 4% Taper   p-val 8% Taper  p-val 15% Taper
+SE_epsa                    0.017            0.001            0.000            0.000            0.000            0.000
+SE_epsz                    0.021            0.002            0.000            0.000            0.000            0.000
+SE_epsva                   0.034            0.001            0.013            0.474            0.595            0.673
+SE_epsxa                   0.037            0.001            0.000            0.000            0.000            0.000
+SE_epsg                    0.030            0.001            0.000            0.000            0.000            0.002
+SE_epsr                    0.023            0.002            0.000            0.000            0.000            0.000
+SE_epstau                  0.036            0.002            0.000            0.000            0.001            0.010
+SE_epsL                    0.073            0.005            0.000            0.000            0.000            0.000
+SE_eps_y_me                0.019            0.002            0.063            0.688            0.772            0.827
+SE_eps_d_me                0.020            0.002            0.000            0.000            0.000            0.000
+SE_eps_pig_me              0.013            0.001            0.000            0.000            0.000            0.002
+SE_eps_rl_me               0.011            0.001            0.366            0.793            0.842            0.867
+SE_eps_tau_me              0.019            0.002            0.000            0.000            0.000            0.000
+SE_eps_bT_me               0.022            0.002            0.000            0.000            0.000            0.000
+va                         2.737            0.076            0.000            0.000            0.000            0.000
+eta                        1.170            0.046            0.000            0.000            0.000            0.000
+bpi                        3.629            0.054            0.000            0.000            0.000            0.000
+by                         0.088            0.014            0.000            0.000            0.000            0.000
+ali                        0.185            0.003            0.000            0.093            0.211            0.326
+br                         0.284            0.006            0.000            0.001            0.015            0.066
+rhoz                       0.443            0.011            0.000            0.000            0.000            0.000
+phib_val                   0.072            0.004            0.000            0.000            0.000            0.000
+
+
+
+
+Convergence diagnostics results for chain 2.
+
+Geweke (1992) Convergence Tests, based on means of draws 1500 to 1800 vs 2250 to 3000 for chain 2.
+p-values are for Chi2-test for equality of means.
+Parameter             Post. Mean        Post. Std   p-val No Taper   p-val 4% Taper   p-val 8% Taper  p-val 15% Taper
+SE_epsa                    0.018            0.001            0.000            0.000            0.000            0.000
+SE_epsz                    0.023            0.001            0.000            0.000            0.000            0.000
+SE_epsva                   0.041            0.001            0.000            0.000            0.000            0.000
+SE_epsxa                   0.037            0.002            0.000            0.000            0.000            0.001
+SE_epsg                    0.031            0.001            0.000            0.000            0.000            0.003
+SE_epsr                    0.028            0.002            0.000            0.000            0.001            0.015
+SE_epstau                  0.030            0.002            0.000            0.000            0.000            0.000
+SE_epsL                    0.060            0.005            0.000            0.000            0.000            0.000
+SE_eps_y_me                0.019            0.001            0.000            0.004            0.036            0.105
+SE_eps_d_me                0.018            0.001            0.000            0.040            0.129            0.229
+SE_eps_pig_me              0.014            0.001            0.000            0.000            0.000            0.000
+SE_eps_rl_me               0.011            0.001            0.000            0.020            0.075            0.134
+SE_eps_tau_me              0.020            0.002            0.000            0.000            0.000            0.000
+SE_eps_bT_me               0.023            0.001            0.000            0.000            0.000            0.001
+va                         2.756            0.082            0.000            0.000            0.000            0.000
+eta                        1.211            0.050            0.000            0.000            0.000            0.000
+bpi                        3.536            0.067            0.000            0.000            0.000            0.000
+by                         0.095            0.013            0.000            0.000            0.006            0.027
+ali                        0.182            0.003            0.000            0.000            0.000            0.000
+br                         0.279            0.005            0.000            0.238            0.385            0.499
+rhoz                       0.439            0.010            0.000            0.002            0.024            0.081
+phib_val                   0.088            0.007            0.000            0.000            0.000            0.000
+
+
+Univariate convergence diagnostic, Brooks and Gelman (1998):
+    Parameter 1...  Done! 
+    Parameter 2...  Done! 
+    Parameter 3...  Done! 
+    Parameter 4...  Done! 
+    Parameter 5...  Done! 
+    Parameter 6...  Done! 
+    Parameter 7...  Done! 
+    Parameter 8...  Done! 
+    Parameter 9...  Done! 
+    Parameter 10...  Done! 
+    Parameter 11...  Done! 
+    Parameter 12...  Done! 
+    Parameter 13...  Done! 
+    Parameter 14...  Done! 
+    Parameter 15...  Done! 
+    Parameter 16...  Done! 
+    Parameter 17...  Done! 
+    Parameter 18...  Done! 
+    Parameter 19...  Done! 
+    Parameter 20...  Done! 
+    Parameter 21...  Done! 
+    Parameter 22...  Done! 
+
+marginal density: I'm computing the posterior mean and covariance...  Done!
+marginal density: I'm computing the posterior log marginal density (modified harmonic mean)... Done!
+
+
+ESTIMATION RESULTS
+
+Log data density (Modified Harmonic Mean) is 1174.503223.
+parameters
+                    prior mean   post. mean        90% HPD interval    prior       pstdev
+
+va                       2.500       2.6861      2.6197      2.7652     gamm       0.7500
+eta                      1.530       1.2276      1.1738      1.2810     gamm       0.4000
+bpi                      1.000       3.5587      3.4374      3.6830     gamm       1.0000
+by                       1.000       0.0841      0.0695      0.1091     gamm       0.7000
+ali                      0.490       0.1844      0.1793      0.1887     beta       0.1000
+br                       0.360       0.2845      0.2741      0.2935     beta       0.1000
+rhoz                     0.450       0.4396      0.4267      0.4570     beta       0.1000
+phib_val                 0.050       0.0830      0.0644      0.0962     beta       0.0500
+
+standard deviation of shocks
+                    prior mean   post. mean        90% HPD interval    prior       pstdev
+
+epsa                     0.050       0.0176      0.0154      0.0195     invg       0.0250
+epsz                     0.050       0.0229      0.0201      0.0260     invg       0.0250
+epsva                    0.050       0.0375      0.0335      0.0416     invg       0.0250
+epsxa                    0.050       0.0374      0.0356      0.0404     invg       0.0250
+epsg                     0.050       0.0302      0.0282      0.0320     invg       0.0250
+epsr                     0.050       0.0258      0.0203      0.0309     invg       0.0250
+epstau                   0.050       0.0326      0.0262      0.0380     invg       0.0250
+epsL                     0.150       0.0655      0.0541      0.0817     invg       0.0750
+eps_y_me                 0.050       0.0184      0.0160      0.0209     invg       0.0250
+eps_d_me                 0.050       0.0181      0.0162      0.0202     invg       0.0250
+eps_pig_me               0.050       0.0138      0.0121      0.0158     invg       0.0250
+eps_rl_me                0.050       0.0107      0.0097      0.0117     invg       0.0250
+eps_tau_me               0.050       0.0182      0.0154      0.0215     invg       0.0250
+eps_bT_me                0.050       0.0222      0.0188      0.0246     invg       0.0250
+Total computing time : 1h25m14s
+Note: warning(s) encountered in MATLAB/Octave code
+
+DIAGNOSTIC RUN FINISHED in 85.3 minutes
