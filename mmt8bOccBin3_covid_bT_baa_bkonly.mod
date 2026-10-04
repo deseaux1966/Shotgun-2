@@ -89,7 +89,7 @@ y = c + gt + 0.5*phip*(((pig-STEADY_STATE(pig))/(STEADY_STATE(pig)))^2);
 m = (gt) - (tau) + (rn)*n;
 n = (m(-1)/pig) + (b(-1)/pig) - (b/rl);
 tau = (tau(-1)^rhotau) * (taubar^(1-rhotau)) * ((b(-1)/((1-omega)*b0))^phib_val) * exp(epstau);
-b = (rlss/pigss)*b(-1) + gt - tau + b0*(1 - rlss/pigss) - (g - taubar);
+b = (rlss/pigss)*b(-1) + gt - tau + (1-omega)*b0*(1 - rlss/pigss) - (g - taubar);
 
 bT = b / (1 + g);
 

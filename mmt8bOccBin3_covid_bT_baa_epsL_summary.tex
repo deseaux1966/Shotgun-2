@@ -146,7 +146,7 @@ estimated) structural parameters were revised this round.
 \]
 was lowered from 0.20 to 0.14. Because government spending is fixed at
 $g=0.2$, the steady state satisfies $\tau_{ss}=\bar\tau$ exactly and
-$b_{ss}=b_0$ exactly (verified numerically), so the steady-state deficit
+$b_{ss}=(1-\omega)b_0=b_0$ exactly ($\omega=0$; verified numerically), so the steady-state deficit
 $g-\bar\tau$ moved from $\approx$0\% to 6\% of GDP -- a more realistic
 target for the 2009--2025 sample away from the ZLB than a balanced
 budget. Comparative statics at the previous round's posterior means
@@ -163,6 +163,51 @@ lower $\chi$ raises real money demand substantially (roughly 8-fold
 from $\chi=2.0$ to $\chi=0.3$ in that sweep), which lowers the inflation
 tax needed to finance a given deficit. Both parameters remain calibrated
 rather than added to \texttt{estimated\_params}.
+
+\paragraph{Bond issuance.} Government debt $b_t$ (real, as a share of
+output) follows
+\begin{equation}
+b_t = \frac{r^{\ell,ss}}{\pi^{ss}}\,b_{t-1} + g_t - \tau_t
++ (1-\omega)b_0\Big(1-\frac{r^{\ell,ss}}{\pi^{ss}}\Big) - (g-\bar\tau),
+\label{eq:bonds}
+\end{equation}
+where $g_t=(1-\rho_g)g+\rho_g g_{t-1}+\varepsilon_{g,t}$ is government
+spending, $\tau_t$ is the tax rule above, $b_0$ is the steady-state level of
+total real debt, $\omega$ is the fraction of bonds held by the central bank
+(so $b_t$ is net debt held by the public, with steady-state target
+$(1-\omega)b_0$, the same target the tax rule responds to), and
+$r^{\ell,ss}/\pi^{ss}=1/\beta\approx1.0033$ is the steady-state gross real
+return on debt. Subtracting $(1-\omega)b_0$ from both sides gives the
+equivalent form
+\[
+b_t-(1-\omega)b_0 = \frac{r^{\ell,ss}}{\pi^{ss}}\,\big(b_{t-1}-(1-\omega)b_0\big)
++ \big[(g_t-\tau_t)-(g-\bar\tau)\big],
+\]
+which carries the intuition. This is an ordinary government budget
+constraint -- this period's debt is last period's debt grossed up at the
+real interest rate, plus the primary deficit $g_t-\tau_t$ -- with two twists.
+First, the \emph{steady-state} deficit $g-\bar\tau$ (6\% of GDP under the
+current calibration) is subtracted out, so net debt sits at $(1-\omega)b_0$
+in steady state; bonds are issued only to cover departures of the primary deficit from
+that steady-state level, while the steady-state deficit itself is financed by
+money creation, through $m_t=g_t-\tau_t+r^n_tn_t$ and the reserve equation
+below. That is why lowering $\bar\tau$ raises steady-state inflation in the
+recalibration above: a larger deficit leans harder on the inflation tax.
+Second, the real return on debt is held at its steady-state value
+$r^{\ell,ss}/\pi^{ss}$ rather than the model's own $r^\ell_{t-1}/\pi_t$, so
+that $b_t$ is a purely backward-looking recursion that depends on no
+forward-looking variable and leaves the Blanchard-Kahn count unchanged
+(see the next paragraph). The only shocks that enter are the
+government-spending and tax-rule shocks $\varepsilon_{g,t}$ and
+$\varepsilon^\tau_t$; debt has no shock of its own. Debt is kept stationary
+by fiscal feedback: the tax rule raises $\tau_t$ when $b_{t-1}$ is above
+$(1-\omega)b_0$ (elasticity $\varphi_b$), which shrinks the deficit and pulls
+debt back to target. Including the factor $(1-\omega)$ in the constant of
+\eqref{eq:bonds} keeps the bond equation and the tax rule on the same
+steady-state target; with $b_0$ alone, the two would disagree whenever
+$\omega>0$. The estimation uses $\omega=0$, so the factor equals one there. The feedback must be positive but need not be large -- the
+determinacy sweep of Section~\ref{sec:detestab} finds the model determinate
+for $\varphi_b$ above about 0.012 and explosive below it.
 
 \paragraph{Reserve equation fix: genuine debt-state coupling.} The
 equation linking reserves $n_t$ to currency and debt (the model's analog
@@ -1418,67 +1463,91 @@ cannot affect the Blanchard-Kahn eigenvalue count or the E-stability
 spectral radius; what isolates the non-ZLB equilibrium is dropping the
 OccBin regime-switching equation, not which shocks are declared.
 
-All other parameters are held at their posterior means from
-Table~\ref{tab:posteriors} (current, diffuse-prior round). The reserve
+All other parameters are held at the posterior means of the production
+round with $\sigma_{me,r^n}$ fixed at 0.0015 (the round used in
+Section~\ref{sec:counterfactual}): $b_\pi=3.355$, $b_y=0.083$,
+$\varphi_b=0.091$, $a_i=0.184$, $b_r=0.252$, $v^a=3.069$, $\eta=1.188$,
+$\rho_z=0.456$. (Earlier versions of this section used the posterior means of
+the estimated-$\sigma_{me,r^n}$ round of Table~\ref{tab:posteriors}, with
+$b_\pi=3.474$; the conclusions are unchanged.) The reserve
 equation fix (Section~1) leaves this analysis mechanically unaffected --
 $n_t$ does not enter the RELAX-regime Jacobian's forward-looking block
 -- and was verified separately to leave the Blanchard-Kahn eigenvalue
 count (4 forward-looking variables) and steady state unchanged.
-Figure~\ref{fig:detestab} sweeps $(b_\pi, b_y) \in [0,5]\times[0,3]$ on a
-$60\times 60$ grid -- the $b_\pi$ range extended from the earlier
-rounds' $[0,3]$ specifically so the current round's posterior mean,
-which the diffuse prior moved to $b_\pi=3.474$, actually falls inside
-the plotted region rather than off its edge. Of the 3{,}600 grid points,
-2{,}857 are simultaneously determinate and E-stable. The determinate and
-E-stable classifications were verified to coincide exactly, cell-for-cell,
-with zero mismatches across all 3{,}600 grid points, as expected from
-Proposition 10.3 for this class of model. Because the two conditions are
-literally identical here, they are combined into a single two-region
-figure rather than shown as separate determinacy and E-stability panels.
-At the posterior mean $(b_\pi,b_y) = (3.474, 0.083)$ the model is
-determinate and E-stable -- comfortably inside the determinate region,
-since the grid's own determinacy threshold along the $b_y=0.083$ line is
-$b_\pi\approx1.10$ and the posterior mean sits more than three times
-that value.
 
-\begin{figure}[h]
+Figure~\ref{fig:detestab} shows two sweeps, each varying two parameters with
+the rest at their posterior means. Panel~(a) sweeps
+$(b_\pi, b_y) \in [0,5]\times[0,3]$ on a $101\times 61$ grid, and panel~(b)
+sweeps $(b_\pi, \varphi_b) \in [0,5]\times[0,1]$ on a $101\times 51$ grid;
+$b_\pi$ is on the horizontal axis in both. The steady state is re-solved at
+every grid point (it depends on $\varphi_b$ through the tax rule).
+
+\begin{figure}[ht]
 \centering
-\includegraphics[width=0.65\textwidth]{det_estab_map_mmt8bOccBin3_covid_bT_baa.pdf}
-\caption{Combined determinacy/E-stability region over
-$(b_\pi,b_y)\in[0,5]\times[0,3]$, all other parameters at posterior
-means (current, diffuse-prior round). Green: determinate \emph{and}
-E-stable (the two conditions coincide exactly on this grid, with
-0/3{,}600 mismatched cells). Red: indeterminate or explosive, and
-E-unstable. The star marks the posterior mean
-$(b_\pi,b_y)=(3.474,0.083)$, now visible within the plotted range.}
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{det_estab_bpi_by_rnfixed.pdf}
+
+(a) $(b_\pi,b_y)$
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{det_estab_bpi_phib_rnfixed.pdf}
+
+(b) $(b_\pi,\varphi_b)$
+\end{minipage}
+\caption{Determinacy/E-stability regions, all other parameters at the
+posterior means of the fixed-$\sigma_{me,r^n}$ round. Green: determinate
+\emph{and} E-stable. Red: indeterminate. Orange (panel b only): explosive,
+no stable equilibrium; grey: rank condition fails. The star marks the
+posterior mean $(b_\pi,b_y)=(3.355,0.083)$ in (a) and
+$(b_\pi,\varphi_b)=(3.355,0.091)$ in (b). Dashed lines: $b_\pi=1$ in (a),
+$b_\pi\approx1.09$ in (b).}
 \label{fig:detestab}
 \end{figure}
 
-As a robustness check on the fiscal feedback parameter $\varphi_b$,
-determinacy and E-stability were re-evaluated at
-$\varphi_b \in \{0.0301,\ 0.0689,\ 0.1005\}$ (the current run's 90\% HPD
-lower bound, posterior mean, and HPD upper bound), holding
-$(b_\pi,b_y)$ at their posterior means:
+\emph{Panel (a): $b_\pi$ and $b_y$.} Of the 6{,}161 grid points, 4{,}872 are
+determinate, and every determinate point is E-stable. The determinacy
+threshold in $b_\pi$ is about 1.09 at the posterior-mean $b_y$ and varies only
+between roughly 1.0 and 1.15 across the whole range of $b_y\in[0,3]$, so the
+Taylor principle is essentially a condition on $b_\pi$ alone here. The
+posterior mean $b_\pi=3.355$ is more than three times the threshold, and the
+point $(3.355,0.083)$ is determinate and E-stable.
+
+\emph{Panel (b): $b_\pi$ and $\varphi_b$.} Of the 5{,}151 grid points, 3{,}950
+are determinate and E-stable. Above $b_\pi\approx1.09$ the model is determinate
+for every $\varphi_b$ from about 0.012 up to the largest value tried, 1 --
+there is no upper limit on fiscal feedback on this grid. Below that
+$\varphi_b$, with debt not responding to taxes, there is no stable equilibrium
+(explosive for $b_\pi\gtrsim1.1$; $\varphi_b=0$ is never determinate). Below
+$b_\pi\approx1.09$ the model is indeterminate at every $\varphi_b\ge0.02$ tried. The
+posterior mean $(3.355,0.091)$ sits well inside the green region.
+
+In both panels the E-stable region coincides with the determinate one. The
+largest root of the predetermined-state block (the spectral radius that governs
+E-stability) is 0.9772 at every determinate point of panel~(a): it is evidently the
+debt-dynamics root, which depends on $\varphi_b$ but not on $(b_\pi,b_y)$. In
+panel~(b) it falls as $\varphi_b$ rises -- 0.9977 at $\varphi_b=0.02$, 0.9746 at
+0.1, and 0.950 (the persistence of the exogenous processes) from about 0.2
+upward -- so stability strengthens with fiscal feedback and is closest to the
+boundary at very small $\varphi_b$. As a check at the parameter's own
+uncertainty, the spectral radius at the 90\% HPD bounds of $\varphi_b$ and at its
+posterior mean, holding $(b_\pi,b_y)$ at their posterior means:
 
 \begin{center}
 \begin{tabular}{@{}lccc@{}}
 \toprule
 $\varphi_b$ & Determinate? & Spectral radius & E-stable? \\
 \midrule
-0.0301 (HPD lower) & Yes & 0.9948 & Yes \\
-0.0689 (posterior mean) & Yes & 0.9837 & Yes \\
-0.1005 (HPD upper) & Yes & 0.9744 & Yes \\
+0.0637 (HPD lower) & Yes & 0.9852 & Yes \\
+0.0912 (posterior mean) & Yes & 0.9772 & Yes \\
+0.1097 (HPD upper) & Yes & 0.9717 & Yes \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Stability holds at all three points, with the spectral radius falling
-(i.e., stability strengthening) as $\varphi_b$ rises across this range,
-as in every previous round. The spectral radii are somewhat closer to
-the instability boundary (1.0) than in the previous round (which ranged
-0.9674--0.9844 across its $\varphi_b$ HPD), consistent with this round's
-lower $\varphi_b$ HPD range sitting closer to zero, but stability is not
-in question at any of the three points.
+Stability holds at all three points, with the spectral radius falling as
+$\varphi_b$ rises, but stability is not in question anywhere in the HPD range.
 
 \section{Steady-State Annualized Rates}
 
